@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--App Margins-->
+    <dimen name="no_margin">0dp</dimen>
+    <dimen name="small_margin">8dp</dimen>
+    <dimen name="medium_margin">16dp</dimen>
+    <dimen name="large_margin">32dp</dimen>
+    <dimen name="xlarge_margin">64dp</dimen>
+    <dimen name="default_margin">16dp</dimen>
+
+    <!--Font Sizes-->
+    <dimen name="xxlarge_font_size">32sp</dimen>
+    <dimen name="xlarge_font_size">30sp</dimen>
+    <dimen name="large_font">28sp</dimen>
+    <dimen name="medium_font">26sp</dimen>
+
+    <!--App Padding-->
+    <dimen name="default_padding">16dp</dimen>
+
+    <!--App Corner Radius-->
+    <dimen name="cardCornerRadius">2dp</dimen>
+    <dimen name="no_elevation">0dp</dimen>
+    <dimen name="match_constraints">0dp</dimen>
+    <dimen name="item_offset">6dp</dimen>
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RxMemory</string>
+    <string name="cardRatio">2.5:3.5</string>
+    <string name="cardImageRatio">1:1</string>
+</resources>

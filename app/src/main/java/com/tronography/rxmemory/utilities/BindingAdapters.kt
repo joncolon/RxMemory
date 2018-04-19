@@ -11,7 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.injection.GlideApp
+import com.tronography.rxmemory.injection.modules.GlideApp
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_LEFT
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_RIGHT

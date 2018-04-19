@@ -1,23 +1,20 @@
 package com.tronography.rxmemory.data.local
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy.IGNORE
 import android.arch.persistence.room.Query
 import com.tronography.rxmemory.data.model.Card
-import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 
 
 @Dao
 interface CardDao {
 
-    @Query("SELECT * FROM ${AppDatabase.CARD_TABLE}")
-    fun getAllCards(): Single<List<Card>>
+    @Query("SELECT * FROM ${AppDatabase.CARD_TABLE} ORDER BY cardId")
+    fun getAllCards(): Flowable<List<Card>>
 
     @Query("SELECT * FROM ${AppDatabase.CARD_TABLE}")
     fun getShuffledDeck(): Single<List<Card>>

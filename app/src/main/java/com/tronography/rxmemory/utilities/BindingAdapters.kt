@@ -46,13 +46,12 @@ object BindingAdapters {
 
 
         url?.let {
-
             GlideApp.with(imageView.context)
                     .load(url)
                     .transform(Bitmap::class.java, cornerTransformation)
                     .fitCenter()
                     .transition(DrawableTransitionOptions.withCrossFade(factory))
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .placeholder(R.drawable.gradient)
                     .into(imageView)
         }

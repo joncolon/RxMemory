@@ -19,7 +19,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromStringtoPokemon(value: String): Pokemon {
+    fun fromStringToPokemon(value: String): Pokemon {
         val type: Type = object : TypeToken<Pokemon>() {}.type
         return Gson().fromJson(value, type)
     }

@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="viewModel"
             type="com.tronography.rxmemory.data.model.Card"/>
@@ -20,6 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"
+            bind:cardBackgroundColor="@{viewModel.isFlipped ? @color/colorAccent : @color/colorWhite}"
             android:elevation="4dp"
             app:cardCornerRadius="@dimen/cardCornerRadius"
             app:cardPreventCornerOverlap="false"
@@ -38,6 +41,7 @@
                 <ImageView
                     android:id="@+id/photo"
                     android:layout_width="match_parent"
+                    android:visibility="@{viewModel.isFlipped ? View.VISIBLE : View.GONE}"
                     android:layout_height="@dimen/match_constraints"
                     android:adjustViewBounds="true"
                     android:elevation="@dimen/no_elevation"

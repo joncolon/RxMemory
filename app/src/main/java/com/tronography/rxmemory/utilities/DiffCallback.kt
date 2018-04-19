@@ -16,15 +16,11 @@ class DiffCallback(internal var newCards: List<Card>, internal var oldCards: Lis
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCards[oldItemPosition].equals(newCards[newItemPosition])
+        return oldCards[oldItemPosition] == newCards[newItemPosition]
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCards[oldItemPosition].equals(newCards[newItemPosition])
-    }
-
-    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        return super.getChangePayload(oldItemPosition, newItemPosition)
+        return oldCards[oldItemPosition] == newCards[newItemPosition]
     }
 
 }

@@ -5,15 +5,17 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.MainActivityViewModel"/>
+            type="com.tronography.rxmemory.ui.game.GameViewModel"/>
+
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.MainActivity">
+        tools:context=".ui.game.GameActivity">
 
         <TextView
             android:id="@+id/error_tv"

@@ -2,12 +2,8 @@ package com.tronography.rxmemory.utilities
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.R.attr.x
-import android.view.Display
-import android.view.WindowManager
-import android.R.attr.y
 import android.graphics.Point
+import android.view.WindowManager
 
 
 object ViewUtils {

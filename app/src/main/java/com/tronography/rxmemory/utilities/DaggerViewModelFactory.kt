@@ -6,6 +6,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
+
 @Suppress("UNCHECKED_CAST")
 @Singleton
 class DaggerViewModelFactory
@@ -16,7 +17,7 @@ class DaggerViewModelFactory
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val creator = creators[modelClass]
                 ?: creators.asIterable().firstOrNull { modelClass.isAssignableFrom(it.key) }?.value
-                ?: throw IllegalArgumentException("unknown model class " + modelClass)
+                ?: throw IllegalArgumentException("unknown model class $modelClass")
 
         return try {
             creator.get() as T

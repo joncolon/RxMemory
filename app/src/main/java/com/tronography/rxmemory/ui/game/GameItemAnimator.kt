@@ -12,8 +12,8 @@ import java.util.*
 
 class GameItemAnimator : DefaultItemAnimator() {
 
-    internal var animationOneMap: MutableMap<RecyclerView.ViewHolder, AnimatorSet> = HashMap()
-    internal var animationTwoMap: MutableMap<RecyclerView.ViewHolder, ObjectAnimator> = HashMap()
+    private var animationOneMap: MutableMap<RecyclerView.ViewHolder, AnimatorSet> = HashMap()
+    private var animationTwoMap: MutableMap<RecyclerView.ViewHolder, ObjectAnimator> = HashMap()
 
     private var lastAddAnimatedItem = -2
 

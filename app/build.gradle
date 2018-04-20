@@ -46,7 +46,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:support-annotations:$android_support_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // Ui Libraries
     implementation "com.android.support:design:$android_support_version"
@@ -62,6 +62,8 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:$android_lifecycle_version"
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    kapt "com.android.databinding:compiler:3.1.1"
 
     // Dagger dependency
     kapt "com.google.dagger:dagger-compiler:$dagger_version"

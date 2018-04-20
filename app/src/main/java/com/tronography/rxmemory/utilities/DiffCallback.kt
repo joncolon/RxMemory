@@ -4,7 +4,7 @@ import android.support.v7.util.DiffUtil
 import com.tronography.rxmemory.data.model.Card
 
 
-class DiffCallback(internal var newCards: List<Card>, internal var oldCards: List<Card>) : DiffUtil.Callback() {
+class DiffCallback(private var newCards: List<Card>, private var oldCards: List<Card>) : DiffUtil.Callback() {
 
 
     override fun getOldListSize(): Int {

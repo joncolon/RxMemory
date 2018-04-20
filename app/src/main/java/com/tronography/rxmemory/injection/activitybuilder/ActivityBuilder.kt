@@ -9,7 +9,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = [(GameActivityModule::class)])
+    @ContributesAndroidInjector(modules = arrayOf(GameActivityModule::class))
     internal abstract fun bindGameActivity(): GameActivity
 
 }

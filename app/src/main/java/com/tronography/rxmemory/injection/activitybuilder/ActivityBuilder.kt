@@ -1,14 +1,15 @@
 package com.tronography.rxmemory.injection.activitybuilder
 
-import com.tronography.rxmemory.ui.MainActivity
-import com.tronography.rxmemory.ui.MainActivityModule
+import com.tronography.rxmemory.ui.game.GameActivity
+import com.tronography.rxmemory.ui.game.module.GameActivityModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+
 
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = [(MainActivityModule::class)])
-    internal abstract fun bindMainActivity(): MainActivity
+    @ContributesAndroidInjector(modules = arrayOf(GameActivityModule::class))
+    internal abstract fun bindGameActivity(): GameActivity
 
 }

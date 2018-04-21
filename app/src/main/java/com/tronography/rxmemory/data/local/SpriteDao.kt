@@ -6,7 +6,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy.IGNORE
 import android.arch.persistence.room.Query
 import com.tronography.rxmemory.data.model.Sprite
-import io.reactivex.Completable
 import io.reactivex.Single
 
 
@@ -15,6 +14,9 @@ interface SpriteDao {
 
     @Query("SELECT * FROM ${AppDatabase.SPRITE_TABLE}")
     fun getAllSprites(): Single<List<Sprite>>
+
+    @Query("SELECT COUNT(*) FROM ${AppDatabase.SPRITE_TABLE}")
+    fun getSpriteCount(): Single<Int>
 
     @Query("SELECT * FROM ${AppDatabase.SPRITE_TABLE} ORDER BY RANDOM() LIMIT 8")
     fun getEightRandomSprites(): Single<List<Sprite>>

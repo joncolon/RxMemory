@@ -1,10 +1,16 @@
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 
 fun executeInThread(function: () -> Unit) {
     Thread({ function() }).start()
+}
+
+fun runOnMainThread(runnable: () -> Unit) {
+    Handler(Looper.getMainLooper()).post(runnable)
 }
 
 fun Any.DEBUG(message: String) {

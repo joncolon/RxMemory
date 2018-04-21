@@ -1,132 +1,97 @@
 package com.tronography.rxmemory.data
 
+
 import DEBUG
 import com.tronography.rxmemory.data.http.HttpConstants
 import com.tronography.rxmemory.data.http.PokeClient
 import com.tronography.rxmemory.data.local.CardDao
-import com.tronography.rxmemory.data.local.MutableCard
-import com.tronography.rxmemory.data.local.MutableSprite
 import com.tronography.rxmemory.data.local.SpriteDao
 import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.data.model.Sprite
-import com.tronography.rxmemory.data.model.SpriteResponse
 import com.tronography.rxmemory.utilities.NetworkConnectivityHelper
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import executeInThread
+import io.reactivex.Observable
+import io.reactivex.Observable.fromCallable
+import io.reactivex.Observable.just
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * @description: MatchDataRepository is the point of access to all match Data information. Includes
- * cache support, network connectivity awareness, Room  access, and uses RxJava 2 for
- * handling HTTP Requests.
- */
 @Singleton
 class Repository
 @Inject
 constructor(
+
         private val networkConnectivity: NetworkConnectivityHelper,
+
         private val cardDao: CardDao,
+
         private val spriteDao: SpriteDao,
+
         private val client: PokeClient
+
 ) {
 
-    fun getAllSprites(): Single<List<Sprite>> {
-        return spriteDao.getAllSprites()
-    }
-
-    fun getEightRandomSprites(): Single<List<Sprite>> {
-        return spriteDao.getEightRandomSprites()
-    }
-
-    fun getSpriteById(id: String): Single<Sprite> {
-        return spriteDao.getSpriteById(id)
-    }
-
-    fun delete(sprite: MutableSprite): Completable {
-        return Completable.fromAction {
-            spriteDao.delete(sprite)
-        }
-    }
-
-    fun insert(sprite: MutableSprite): Completable {
-        return Completable.fromAction { spriteDao.insert(sprite) }
-    }
-
-    fun insert(card: MutableCard): Completable {
-        return Completable.fromAction { cardDao.insert(card) }
-    }
-
-    fun getCardById(cardId: String): Single<Card> {
-        return cardDao.getCardById(cardId)
-    }
-
-    fun getEightRandomCards(): Single<List<Card>> {
-        return cardDao.getShuffledDeck()
-    }
-
-    fun updateCardFlip(cardId: String, isFlipped: Boolean): Completable {
-        return Completable.fromAction { cardDao.updateCardFlip(cardId, isFlipped) }
-    }
-
-    fun updateCardMatch(cardId: String, isMatched: Boolean) {
-        Completable.fromAction { cardDao.updateCardFlip(cardId, isMatched) }
-    }
-
-    fun delete(card: MutableCard) {
-        Completable.fromAction { cardDao.delete(card) }
-    }
-
     fun deleteCardTable() {
-        Completable.fromAction { cardDao.deleteTable() }
-    }
-
-    fun getCards(): Single<List<Card>> {
-        return cardDao.getAllCards()
-    }
-
-    fun getDeck(): Single<List<Card>> {
-//        getEightRandomSprites()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .
-
-        return cardDao.getAllCards()
-    }
-
-    fun updateFlip(card: Card) {
-        return cardDao.updateCardFlip(card.cardId, false)
+        executeInThread { cardDao.deleteTable() }
     }
 
     fun updateMatch(card: Card, isMatched: Boolean) {
-        return cardDao.updateCardMatch(card.cardId, isMatched)
+        return executeInThread { cardDao.updateCardMatch(card.cardId, isMatched) }
     }
 
-    fun refreshSprites(): Completable {
+    fun updateCardFlip(card: Card, isFlipped: Boolean) {
+        executeInThread { cardDao.updateCardFlip(card.cardId, isFlipped) }
+    }
+
+    fun getSprites(): Observable<List<Card>> {
+        return getSpritesFromDB()
+                .subscribeOn(Schedulers.io())
+                .flatMap { sprites ->
+                    if (sprites.isEmpty()) {
+                        return@flatMap downloadSprites()
+                    } else
+                        return@flatMap just(sprites)
+                }
+                .concatMap { sprites -> fromCallable { updateCardDatabase(sprites) } }
+                .switchMap { cardDao.getAllCards().toObservable() }
+    }
+
+    private fun downloadSprites(): Observable<List<Sprite>> {
         return client.getSprites()
                 .subscribeOn(Schedulers.io())
-                .map { response: SpriteResponse -> response.sprites }
-                .doOnSuccess { sprites ->
-                    sprites.forEach {
-                        updateSpriteDatabase(it)
-                    }
-                }.toCompletable()
-
+                .toObservable()
+                .map { response -> response.sprites }
+                .concatMap { sprites -> fromCallable { updateSpriteDatabase(sprites) } }
+                .switchMap { t -> getSpritesFromDB() }
     }
 
-    private fun updateCardDatabase(sprite: Sprite) {
-        val photoUrl = HttpConstants.DOMAIN + sprite.image
-        val card = Card(sprite.id, photoUrl, sprite.pokemon.name)
-        val duplicateCard = Card(sprite.id, photoUrl, sprite.pokemon.name)
-        cardDao.insert(card.toMutable())
-        cardDao.insert(duplicateCard.toMutable())
+    private fun getSpritesFromDB(): Observable<List<Sprite>> {
+        return spriteDao.getEightRandomSprites()
+                .toObservable()
+                .doOnNext { DEBUG("Dispatching ${it.size} sprites from DB...") }
     }
 
-    private fun updateSpriteDatabase(sprite: Sprite) {
-        DEBUG(sprite.toString())
-        spriteDao.insert(sprite.toMutable())
+    private fun updateCardDatabase(sprites: List<Sprite>) {
+        DEBUG("Saving ${sprites.size} Cards to DB")
+        sprites.forEach {
+            val photoUrl = HttpConstants.DOMAIN + it.image
+            val card = Card(it.id, photoUrl, it.pokemon.name)
+            val duplicateCard = Card(it.id, photoUrl, it.pokemon.name)
+
+            cardDao.insert(card.toMutable())
+            cardDao.insert(duplicateCard.toMutable())
+
+            DEBUG("Inserted $card into Card DB")
+            DEBUG("Inserted $duplicateCard into Card DB")
+        }
+    }
+
+    private fun updateSpriteDatabase(sprites: List<Sprite>) {
+        sprites.forEach { sprite ->
+            spriteDao.insert(sprite.toMutable())
+            DEBUG("Inserted $sprite into Card DB")
+        }
     }
 
 }

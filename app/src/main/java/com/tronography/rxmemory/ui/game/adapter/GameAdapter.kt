@@ -1,20 +1,27 @@
-package com.tronography.rxmemory.ui
+package com.tronography.rxmemory.ui.game.adapter
 
-import DEBUG
+import android.support.constraint.ConstraintLayout
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.databinding.CardBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
-import com.tronography.rxmemory.ui.common.OnCardClickedListener
+import com.tronography.rxmemory.ui.game.GameViewModel
+import com.tronography.rxmemory.ui.game.listeners.OnCardClickedListener
 import java.util.*
 import javax.inject.Inject
 
-class GameAdapter @Inject constructor(val mainActivityViewModel: MainActivityViewModel) : RecyclerView.Adapter<BaseViewHolder>(), OnCardClickedListener {
+class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) : RecyclerView.Adapter<BaseViewHolder>(), OnCardClickedListener {
 
-    override fun onCardClicked(card : Card) {
-        mainActivityViewModel
+    var isClickable: Boolean = true
+
+    override fun onCardClicked(card: Card) {
+        if (isClickable) {
+            gameViewModel.selectCard(card)
+        }
     }
 
     val cards: MutableList<Card>
@@ -34,7 +41,7 @@ class GameAdapter @Inject constructor(val mainActivityViewModel: MainActivityVie
         holder.adapterPosition
         holder.itemView.setOnClickListener({
             val adapterPosition = holder.adapterPosition
-            when {adapterPosition != RecyclerView.NO_POSITION -> onCardClicked(cards[position])
+            when {adapterPosition != RecyclerView.NO_POSITION -> onCardClicked(cards[adapterPosition])
             }
         })
         holder.onBind(position)
@@ -54,10 +61,14 @@ class GameAdapter @Inject constructor(val mainActivityViewModel: MainActivityVie
             BaseViewHolder(binding.root) {
 
         lateinit var card: Card
+        var cardFront: CardView = binding.cardFront
+        var card_front_image: ImageView = binding.cardFrontImage
+        var card_back_image: ImageView = binding.cardBackImage
+        var background: ConstraintLayout = binding.cardFrontContainer
+        var cardLayout: ConstraintLayout = binding.cardLayout
 
         override fun onBind(position: Int) {
             card = cards[position]
-            DEBUG("onBind: ${card.cardId}")
             binding.viewModel = card
             binding.executePendingBindings()
         }

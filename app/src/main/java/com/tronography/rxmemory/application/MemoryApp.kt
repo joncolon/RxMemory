@@ -2,7 +2,7 @@ package com.tronography.rxmemory.application
 
 import android.app.Activity
 import android.app.Application
-import com.tronography.rxmemory.injection.DaggerAppComponent
+import com.tronography.rxmemory.injection.components.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector

@@ -10,6 +10,7 @@ import java.util.*
 @SuppressLint("ParcelCreator")
 @Parcelize
 data class Card(
+
         val spriteId: Int,
 
         val photoUrl: String,
@@ -21,10 +22,21 @@ data class Card(
         val isFlipped: Boolean = false,
 
         val isMatched: Boolean = false
+
 ) : Parcelable {
 
     fun toMutable(): MutableCard {
         return MutableCard(spriteId, photoUrl, description, cardId, isFlipped, isMatched)
+    }
+
+    fun flipCard(flip: Boolean): Card {
+        val cardToFlip = MutableCard(spriteId, photoUrl, description, cardId, flip, isMatched)
+        return cardToFlip.toImmutable()
+    }
+
+    fun matchCard(match: Boolean): Card {
+        val cardToMatch = MutableCard(spriteId, photoUrl, description, cardId, isFlipped, match)
+        return cardToMatch.toImmutable()
     }
 
 }

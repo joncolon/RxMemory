@@ -10,9 +10,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Pokemon(
 
-	@field:SerializedName("resource_uri")
-	val resourceUri: String,
+        @field:SerializedName("resource_uri")
+        val resourceUri: String,
 
-	@field:SerializedName("name")
-	val name: String
+        @field:SerializedName("name")
+        val name: String
+
 ) : Parcelable

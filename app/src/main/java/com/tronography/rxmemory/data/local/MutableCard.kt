@@ -7,7 +7,8 @@ import java.util.*
 
 
 @Entity(tableName = AppDatabase.CARD_TABLE)
-class MutableCard (
+class MutableCard(
+
         var spriteId: Int,
 
         var photoUrl: String,

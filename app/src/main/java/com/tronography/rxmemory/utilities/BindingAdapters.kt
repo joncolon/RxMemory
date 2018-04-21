@@ -2,16 +2,13 @@ package com.tronography.rxmemory.utilities
 
 import android.databinding.BindingAdapter
 import android.graphics.Bitmap
-import android.support.annotation.ColorInt
-import android.support.v7.widget.CardView
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
-import com.tronography.rxmemory.R
-import com.tronography.rxmemory.injection.GlideApp
+import com.tronography.rxmemory.injection.modules.GlideApp
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_LEFT
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_RIGHT
@@ -28,7 +25,7 @@ object BindingAdapters {
      * to prevent distortion
      *
      * @param imageView The ImageView to bind Glide to
-     * @param url The URL of the image to load
+     * @param url The URL of the card_front_image to load
      */
     @BindingAdapter("imageUrl")
     @JvmStatic
@@ -43,28 +40,15 @@ object BindingAdapters {
 
         val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
 
-
-
         url?.let {
-
             GlideApp.with(imageView.context)
                     .load(url)
                     .transform(Bitmap::class.java, cornerTransformation)
                     .fitCenter()
                     .transition(DrawableTransitionOptions.withCrossFade(factory))
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .placeholder(R.drawable.gradient)
                     .into(imageView)
         }
-    }
-
-    /**
-     * Bind color to a CardView's setCardBackgroundColor.
-     */
-    @BindingAdapter("cardBackgroundColor")
-    @JvmStatic
-    fun setCardBackgroundColor(cardView: CardView, @ColorInt color: Int) {
-        cardView.setCardBackgroundColor(color)
     }
 
     private fun cachePhotos(source: String, view: ImageView) {

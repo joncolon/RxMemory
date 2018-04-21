@@ -15,15 +15,16 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/card_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/card_front"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="4dp"
-            bind:cardBackgroundColor="@{viewModel.isFlipped ? @color/colorAccent : @color/colorWhite}"
-            android:elevation="4dp"
+            android:elevation="2dp"
             app:cardCornerRadius="@dimen/cardCornerRadius"
             app:cardPreventCornerOverlap="false"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,15 +34,16 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/card_match_container"
+                android:id="@+id/card_front_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/card_back_background"
                 android:elevation="@dimen/no_elevation">
 
                 <ImageView
-                    android:id="@+id/photo"
+                    android:id="@+id/card_front_image"
                     android:layout_width="match_parent"
-                    android:visibility="@{viewModel.isFlipped ? View.VISIBLE : View.GONE}"
+                    android:visibility="gone"
                     android:layout_height="@dimen/match_constraints"
                     android:adjustViewBounds="true"
                     android:elevation="@dimen/no_elevation"
@@ -51,7 +53,24 @@
                     app:layout_constraintTop_toTopOf="parent"
                     bind:imageUrl="@{viewModel.photoUrl}"
                     app:layout_constraintVertical_chainStyle="spread_inside"
-                    tools:src="@tools:sample/avatars"/>
+                    />
+
+                <ImageView
+                    android:id="@+id/card_back_image"
+                    android:layout_width="match_parent"
+                    android:padding="40dp"
+                    android:visibility="visible"
+                    android:scaleType="fitCenter"
+                    android:layout_height="@dimen/match_constraints"
+                    android:adjustViewBounds="true"
+                    android:elevation="@dimen/no_elevation"
+                    android:background="@drawable/ic_pokeball_card_back"
+                    app:layout_constraintDimensionRatio="@string/cardImageRatio"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="spread_inside"
+                    />
 
             </android.support.constraint.ConstraintLayout>
 

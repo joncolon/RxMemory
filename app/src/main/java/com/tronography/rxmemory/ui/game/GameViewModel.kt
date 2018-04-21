@@ -209,7 +209,7 @@ class GameViewModel @Inject constructor(
     }
 
     companion object {
-        private const val ONE_AND_A_HALF_SECONDS = 500
+        private const val ONE_AND_A_HALF_SECONDS = 600
     }
 
     override fun onCleared() {

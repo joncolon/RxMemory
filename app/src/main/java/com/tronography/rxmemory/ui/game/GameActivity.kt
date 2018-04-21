@@ -11,6 +11,8 @@ import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.databinding.ActivityGameBinding
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import com.tronography.rxmemory.ui.base.BaseActivity
+import com.tronography.rxmemory.ui.game.adapter.GameAdapter
+import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
 import com.tronography.rxmemory.utilities.DiffCallback
 import com.tronography.rxmemory.utilities.GridItemOffsetDecorator
 import io.reactivex.android.schedulers.AndroidSchedulers

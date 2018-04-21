@@ -16,11 +16,11 @@ class DiffCallback(private var newCards: List<Card>, private var oldCards: List<
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCards[oldItemPosition] == newCards[newItemPosition]
+        return oldCards[oldItemPosition].spriteId == newCards[newItemPosition].spriteId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCards[oldItemPosition] == newCards[newItemPosition]
+        return oldCards[oldItemPosition].isFlipped == newCards[newItemPosition].isFlipped
     }
 
 }

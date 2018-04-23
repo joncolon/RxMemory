@@ -1,5 +1,6 @@
 package com.tronography.rxmemory.ui.game.adapter
 
+import DEBUG
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -18,7 +19,16 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
 
     var isClickable: Boolean = true
 
+    fun enableCardClick() {
+        isClickable = true
+    }
+
+    fun disableCardClicks() {
+        isClickable = false
+    }
+
     override fun onCardClicked(card: Card) {
+        DEBUG("ADAPTER CLICKABLE : $isClickable")
         if (isClickable) {
             gameViewModel.selectCard(card)
         }
@@ -40,6 +50,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.adapterPosition
         holder.itemView.setOnClickListener({
+            DEBUG("VIEW $it CLICKED")
             val adapterPosition = holder.adapterPosition
             when {adapterPosition != RecyclerView.NO_POSITION -> onCardClicked(cards[adapterPosition])
             }

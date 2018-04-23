@@ -16,8 +16,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/card_layout"
+        android:foregroundGravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_front"
@@ -28,7 +29,7 @@
             app:cardCornerRadius="@dimen/cardCornerRadius"
             app:cardPreventCornerOverlap="false"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintDimensionRatio="@string/cardRatio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -44,6 +45,7 @@
                     android:id="@+id/card_front_image"
                     android:layout_width="match_parent"
                     android:visibility="gone"
+                    android:layout_margin="1dp"
                     android:layout_height="@dimen/match_constraints"
                     android:adjustViewBounds="true"
                     android:elevation="@dimen/no_elevation"
@@ -51,14 +53,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     bind:imageUrl="@{viewModel.photoUrl}"
-                    app:layout_constraintVertical_chainStyle="spread_inside"
                     />
 
                 <ImageView
                     android:id="@+id/card_back_image"
                     android:layout_width="match_parent"
-                    android:padding="40dp"
+                    android:layout_margin="8dp"
                     android:visibility="visible"
                     android:scaleType="fitCenter"
                     android:layout_height="@dimen/match_constraints"
@@ -69,7 +71,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_chainStyle="spread_inside"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     />
 
             </android.support.constraint.ConstraintLayout>

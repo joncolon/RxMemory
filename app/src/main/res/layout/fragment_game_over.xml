@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.tronography.rxmemory.ui.game.GameViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/card_front_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:elevation="@dimen/no_elevation">
+
+                <TextView
+                    android:id="@+id/you_won_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/colorGold"
+                    android:textSize="@dimen/medium_font"
+                    android:fontFamily="@font/pokemon_solid"
+                    android:gravity="center_horizontal"
+                    android:text="@string/you_won"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/try_again_tv"
+                    app:layout_constraintVertical_chainStyle="spread"/>
+
+                <TextView
+                    android:id="@+id/try_again_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textSize="12sp"
+                    android:text="@string/try_again"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/try_again_tv" />
+
+                <android.support.constraint.Guideline
+                    android:id="@+id/end_guideline"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="4" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>
+

@@ -3,18 +3,16 @@ package com.tronography.rxmemory.ui.game
 import DEBUG
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
+import android.support.v4.app.Fragment
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState
-import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.databinding.ActivityGameBinding
-import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.game.adapter.GameAdapter
-import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
-import com.tronography.rxmemory.utilities.DiffCallback
-import com.tronography.rxmemory.utilities.GridItemOffsetDecorator
+import com.tronography.rxmemory.utilities.DaggerViewModelFactory
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -22,18 +20,19 @@ import io.reactivex.schedulers.Schedulers
 import toast
 import javax.inject.Inject
 
-class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>() {
+class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var viewModelFactory: DaggerViewModelFactory
 
-    private lateinit var adapter: GameAdapter
+    @Inject
+    lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
     private val disposables = CompositeDisposable()
 
-
     override val bindingVariable: Int
         get() = BR.viewModel
+
 
     override val layoutId: Int
         get() = R.layout.activity_game
@@ -41,51 +40,24 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>() {
     override val viewModel: GameViewModel
         get() = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpRecyclerView()
+        showGameFragment()
+        subscribeToGameState()
     }
 
-    override fun onStart() {
-        super.onStart()
-        setUpSubscriptions()
+    private fun showGameFragment() {
+        supportFragmentManager
+                .beginTransaction()
+                .disallowAddToBackStack()
+                .add(R.id.fragment_container, GameFragment.newInstance(), GameFragment.TAG)
+                .commit()
     }
 
     private fun clearDisposables() {
         DEBUG("Clearing Disposables")
         disposables.dispose()
         DEBUG("Disposables cleared : ${disposables.isDisposed}")
-    }
-
-    private fun setUpSubscriptions() {
-        disposables.addAll(
-                subscribeToDeck(),
-                subscribeToFlipCount(),
-                subscribeToGameState()
-        )
-    }
-
-    private fun subscribeToDeck(): Disposable? {
-        return viewModel.getDeck()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { cards ->
-                    cards?.let {
-                        DEBUG("${cards.size} cards received ")
-                        updateList(cards)
-                    }
-                }
-    }
-
-    private fun subscribeToFlipCount(): Disposable? {
-        return viewModel.getFlippedCardCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { count ->
-                    DEBUG("$count FLIPPED CARDS")
-                    adapter.isClickable = count < 2
-                    DEBUG("ADAPTER CLICKABLE = ${adapter.isClickable}")
-                }
     }
 
     private fun subscribeToGameState(): Disposable? {
@@ -95,25 +67,28 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>() {
                 .subscribe { gameState ->
                     DEBUG("GAME STATE : ${gameState.name}")
                     when (gameState.name) {
-                        GameState.GAME_OVER.name -> this.toast("GAME OVER")
+                        GameState.GAME_OVER.name -> {
+                            this.toast("GAME OVER")
+                            disableBlueIndicator()
+                        }
+
+                        GameState.IN_PROGRESS.name -> {
+                            enableBlueIndicator()
+                        }
                     }
                 }
     }
 
-    private fun setUpRecyclerView() {
-        adapter = GameAdapter(viewModel)
-        val itemDecoration = GridItemOffsetDecorator(this, R.dimen.item_offset)
-        viewDataBinding.recyclerView.adapter = adapter
-        viewDataBinding.recyclerView.addItemDecoration(itemDecoration)
-        viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
+    private fun enableBlueIndicator() {
+        viewDataBinding.blueIndicator.setImageResource(R.drawable.gradient_blue_glow)
     }
 
-    private fun updateList(cards: List<Card>) {
-        val oldCards = adapter.cards
-        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(cards, oldCards))
-        adapter.clearItems()
-        adapter.addItems(cards)
-        result.dispatchUpdatesTo(adapter)
+    private fun disableBlueIndicator() {
+        viewDataBinding.blueIndicator.setImageResource(R.drawable.gradient_blue_dim)
+    }
+
+    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+        return fragmentDispatchingAndroidInjector
     }
 
     override fun onDestroy() {

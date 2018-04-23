@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#8C061D</color>
     <color name="colorAccent">#2EA4FF</color>
     <color name="colorPokedexBlue">#57C0F9</color>
+    <color name="colorGold">#FF9F1C</color>
     <color name="colorCardBackBorder">#022F82</color>
     <color name="colorCardBackFill">#0D4F89</color>
     <color name="colorGrey">#D8DCDB</color>
@@ -13,4 +14,7 @@
     <color name="colorTextDark">#171717</color>
     <color name="colorTextLight">#8D93A0</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightBlue">#A8D4EC</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorMediumBlue">#41A2D7</color>
 </resources>

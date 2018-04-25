@@ -17,6 +17,8 @@ enum class GameState {
 
     MATCH_FOUND,
 
-    RESETTING_CARDS
+    RESETTING_CARDS,
+
+    RESTARTING
 
 }

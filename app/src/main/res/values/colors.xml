@@ -13,8 +13,8 @@
     <!--Text Color-->
     <color name="colorTextDark">#171717</color>
     <color name="colorTextLight">#8D93A0</color>
-    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite">#F8F8F8</color>
     <color name="colorLightBlue">#A8D4EC</color>
-    <color name="colorBlack">#000000</color>
+    <color name="colorBlack">#1F1F1F</color>
     <color name="colorMediumBlue">#41A2D7</color>
 </resources>

@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game
+package com.tronography.rxmemory.ui.pokedex
 
 import DEBUG
 import android.arch.lifecycle.ViewModelProviders
@@ -16,9 +16,9 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.databinding.FragmentGameBinding
-import com.tronography.rxmemory.ui.game.adapter.GameAdapter
-import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
+import com.tronography.rxmemory.ui.pokedex.adapter.GameAdapter
+import com.tronography.rxmemory.ui.pokedex.adapter.GameItemAnimator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import com.tronography.rxmemory.utilities.DiffCallback
 import dagger.android.support.AndroidSupportInjection
@@ -99,6 +99,7 @@ class GameFragment : Fragment() {
     }
 
     private fun subscribeToDeck(): Disposable? {
+        DEBUG("subscribing to deck")
         return viewModel.getDeck()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe { cards ->
@@ -110,6 +111,7 @@ class GameFragment : Fragment() {
     }
 
     private fun subscribeToFlipCount(): Disposable? {
+        DEBUG("subscribing to flip count")
         return viewModel.getFlippedCardCount()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -125,18 +127,20 @@ class GameFragment : Fragment() {
     }
 
     private fun subscribeToGameState(): Disposable? {
+        DEBUG("subscribing to game state")
         return viewModel.getGameState()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { gameState ->
                     DEBUG("GAME STATE : ${gameState.name}")
-                    when (gameState.name) {
-                        GameState.GAME_OVER.name -> {
+                    when (gameState) {
+                        GameState.GAME_OVER -> {
                             activity?.toast("GAME OVER")
                             adapter.disableCardClicks()
+                            onDestroy()
                         }
 
-                        GameState.IN_PROGRESS.name -> {
+                        GameState.IN_PROGRESS -> {
                             adapter.enableCardClick()
                         }
                     }

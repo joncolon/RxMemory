@@ -44,7 +44,7 @@ constructor(
         executeInThread { cardDao.updateCardFlip(card.cardId, isFlipped) }
     }
 
-    fun getSprites(): Observable<List<Card>> {
+    fun getCards(): Observable<List<Card>> {
         return getSpritesFromDB()
                 .subscribeOn(Schedulers.io())
                 .flatMap { sprites ->

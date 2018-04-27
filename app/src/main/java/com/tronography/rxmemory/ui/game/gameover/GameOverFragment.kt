@@ -41,7 +41,9 @@ class GameOverFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
+        try {
+            viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
+        } catch (error : Exception) {kotlin.error("Activity can not be null")}
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView

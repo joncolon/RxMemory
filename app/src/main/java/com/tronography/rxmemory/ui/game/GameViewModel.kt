@@ -56,7 +56,7 @@ class GameViewModel
 
     fun refreshCards() {
         broadcastGameState(IN_PROGRESS)
-        repository.deleteCardTable()
+        repository.createNewDeck()
     }
 
     fun getAttemptCount(): Int {
@@ -88,7 +88,7 @@ class GameViewModel
     private fun selectCard(card: Card) {
         when (flippedCards.isEmpty()) {
             true -> {
-                selectedCard = card.selectCard()
+                setSelectedCard(card)
                 selectedCard?.let { updateFlippedCards(it) }
             }
             false -> {
@@ -104,6 +104,10 @@ class GameViewModel
                                 .subscribe())
             }
         }
+    }
+
+    private fun setSelectedCard(card: Card) {
+        selectedCard = card.selectCard()
     }
 
     private fun validateCardMatch(card: Card) {
@@ -193,6 +197,7 @@ class GameViewModel
     }
 
     private fun isMaxCardsFlipped() {
+        DEBUG("isMaxCardsFlipped = ${flippedCards.size >= MAX_CARD_FLIPS}")
         if (flippedCards.size >= MAX_CARD_FLIPS) {
             broadcastGameState(RESETTING_CARDS)
         } else {

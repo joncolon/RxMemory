@@ -2,10 +2,12 @@ package com.tronography.rxmemory.data.repository
 
 
 import DEBUG
+import ERROR
 import android.arch.lifecycle.LiveData
 import com.tronography.rxmemory.data.http.HttpConstants
 import com.tronography.rxmemory.data.http.PokeClient
 import com.tronography.rxmemory.data.local.CardDao
+import com.tronography.rxmemory.data.local.MutableCard
 import com.tronography.rxmemory.data.local.SpriteDao
 import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.data.model.Sprite
@@ -34,9 +36,8 @@ constructor(
 
 ) {
 
-    fun deleteCardTable(): Observable<Unit>? {
+    fun deleteCardTable(): Observable<Unit> {
         return Observable.fromCallable { cardDao.deleteTable() }
-                .subscribeOn(Schedulers.io())
     }
 
     fun updateMatch(card: Card, isMatched: Boolean) {
@@ -57,24 +58,25 @@ constructor(
     }
 
     fun createNewDeck() {
-        deleteCardTable()
-                ?.flatMap { return@flatMap getSpritesFromDB() }
-                ?.flatMap { sprites ->
+        getSpritesFromDB()
+                .subscribeOn(Schedulers.io())
+                .flatMap { sprites ->
                     if (sprites.isEmpty()) {
                         return@flatMap getSpritesFromAPI()
                     } else
-                        return@flatMap just(sprites)
-                }?.subscribeWith(object : DisposableObserver<List<Sprite>>() {
+                        return@flatMap Observable.just(sprites)
+                }
+                .concatMap { sprites -> Observable.just<Unit>(updateCardDatabase(sprites)) }
+                .subscribeWith(object : DisposableObserver<Unit>() {
                     override fun onComplete() {
 
                     }
 
-                    override fun onNext(t: List<Sprite>) {
-                        executeInThread { updateCardDatabase(t) }
+                    override fun onNext(t: Unit) {
                     }
 
                     override fun onError(e: Throwable) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        ERROR("Unable to create a new deck : \n${e.cause} \n${e.message}")
                     }
                 })
     }
@@ -82,11 +84,10 @@ constructor(
 
     private fun getSpritesFromAPI(): Observable<List<Sprite>> {
         return client.getSprites()
-                .subscribeOn(Schedulers.io())
                 .toObservable()
                 .map { response -> response.sprites }
                 .concatMap { sprites -> fromCallable { updateSpriteDatabase(sprites) } }
-                .switchMap { t -> getSpritesFromDB() }
+                .switchMap { getSpritesFromDB() }
     }
 
     private fun getSpritesFromDB(): Observable<List<Sprite>> {
@@ -97,17 +98,18 @@ constructor(
 
     private fun updateCardDatabase(sprites: List<Sprite>) {
         DEBUG("Saving ${sprites.size} Cards to DB")
+        val cards = mutableListOf<MutableCard>()
         sprites.forEach {
             val photoUrl = HttpConstants.DOMAIN + it.image
             val card = Card(it.id, photoUrl, it.pokemon.name)
             val duplicateCard = Card(it.id, photoUrl, it.pokemon.name)
 
-            cardDao.insert(card.toMutable())
-            cardDao.insert(duplicateCard.toMutable())
+            cards.add(card.toMutable())
+            cards.add(duplicateCard.toMutable())
 
-            DEBUG("Inserted $card into Card DB")
-            DEBUG("Inserted $duplicateCard into Card DB")
         }
+
+        cardDao.repopulateTable(cards)
     }
 
     private fun updateSpriteDatabase(sprites: List<Sprite>) {

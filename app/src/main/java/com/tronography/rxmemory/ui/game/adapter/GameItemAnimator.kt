@@ -157,16 +157,16 @@ class GameItemAnimator : DefaultItemAnimator() {
         rotationAnim.interpolator = ACCELERATE_INTERPOLATOR
 
         val bounceAnimX = ObjectAnimator.ofFloat(holder.cardFront, "scaleX", 0.2f, 1f)
-        bounceAnimX.duration = 300
+        bounceAnimX.duration = 450
         bounceAnimX.interpolator = OVERSHOOT_INTERPOLATOR
 
         val bounceAnimY = ObjectAnimator.ofFloat(holder.cardFront, "scaleY", 0.2f, 1f)
-        bounceAnimY.duration = 300
+        bounceAnimY.duration = 450
         bounceAnimY.interpolator = OVERSHOOT_INTERPOLATOR
         bounceAnimY.addListener(object : AnimatorListenerAdapter() {
 
             override fun onAnimationEnd(animation: Animator) {
-                cardFlipAnimationMap.remove(holder)
+                animationTwoMap.remove(holder)
                 dispatchChangeFinishedIfAllAnimationsEnded(holder)
             }
         })
@@ -204,6 +204,10 @@ class GameItemAnimator : DefaultItemAnimator() {
                 true -> animateFlipRevealCardFront(holder)
                 false -> animateFlipRevealCardBack(holder)
             }
+
+            when (holder.card.isMatched) {
+                true -> animateSpinEntry(holder)
+            }
         }
 
         return false
@@ -216,9 +220,6 @@ class GameItemAnimator : DefaultItemAnimator() {
         if (animationTwoMap.containsKey(item)) {
             animationTwoMap[item]?.cancel()
         }
-    }
-
-    private fun animateBackgroundColor(holder: GameAdapter.CardViewHolder) {
     }
 
     private fun dispatchChangeFinishedIfAllAnimationsEnded(holder: GameAdapter.CardViewHolder) {

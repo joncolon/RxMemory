@@ -1,83 +1,113 @@
 package com.tronography.rxmemory.ui.game
 
 import DEBUG
-import ERROR
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.tronography.rxmemory.data.Repository
 import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.repository.Repository
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.data.state.GameState.*
+import com.tronography.rxmemory.utilities.GlideUtils
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
+import runOnMainThread
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class GameViewModel @Inject constructor(
-        private val repository: Repository) : ViewModel() {
+@Singleton
+class GameViewModel
+@Inject constructor(
+        private val repository: Repository,
+        private val glideUtils: GlideUtils
+) : ViewModel() {
 
-    private var deck: BehaviorSubject<List<Card>> = BehaviorSubject.create()
-    private var gameState: BehaviorSubject<GameState> = BehaviorSubject.create()
-    private var flippedCardCount: BehaviorSubject<Int> = BehaviorSubject.create()
+
+    private var gameState = MutableLiveData<GameState>()
+    private var flippedCardCount = MutableLiveData<Int>()
 
     private val matchedCards = HashMap<String, Card>()
     private val flippedCards = HashMap<String, Card>()
 
-    private var attemptCount: Int
-
     private var selectedCard: Card? = null
 
+    private var attemptCount: Int
 
     private val disposables = CompositeDisposable()
 
     init {
-        repository.deleteCardTable()
-        attemptCount = 0
-        gameState.onNext(NOT_IN_PROGRESS)
+        broadcastGameState(NOT_IN_PROGRESS)
+        DEBUG("Initializing GameViewModel")
+        attemptCount = ZERO
         refreshCards()
     }
 
-    fun getDeck(): Observable<List<Card>> {
-        return deck
+    fun observeDeck(): LiveData<List<Card>> {
+        return repository.getCards()
     }
 
-    fun getFlippedCardCount(): Observable<Int> {
+    fun observeFlipCount(): LiveData<Int> {
         return flippedCardCount
     }
 
-    fun getGameState(): Observable<GameState> {
+    fun refreshCards() {
+        broadcastGameState(IN_PROGRESS)
+        repository.createNewDeck()
+    }
+
+    fun getAttemptCount(): Int {
+        return attemptCount
+    }
+
+    fun getGameState(): LiveData<GameState> {
         return gameState
     }
 
     fun restartGame() {
-        gameState.onNext(NOT_IN_PROGRESS)
-        repository.deleteCardTable()
+        broadcastGameState(RESTARTING)
         flippedCards.clear()
         matchedCards.clear()
         attemptCount = 0
+        isMaxCardsFlipped()
+        broadcastGameState(LOADING)
         refreshCards()
     }
 
-    fun selectCard(card: Card) {
-        if (!isSelected(card)) {
-            when (flippedCards.isEmpty()) {
-                true -> {
-                    setSelectedCard(card)
-                    updateFlippedCards(card)
-                }
-                false -> disposables.add(
+    fun onCardClicked(card: Card) {
+        DEBUG("isNotSelected(${card.description}) = ${isNotSelected(card)}")
+        if (isNotSelected(card)) {
+            selectCard(card)
+            isMaxCardsFlipped()
+        }
+    }
+
+    private fun selectCard(card: Card) {
+        when (flippedCards.isEmpty()) {
+            true -> {
+                setSelectedCard(card)
+                selectedCard?.let { updateFlippedCards(it) }
+            }
+            false -> {
+                incrementAttemptCount()
+                isMaxCardsFlipped()
+                disposables.add(
                         Completable.fromAction { validateCardMatch(card) }
                                 .subscribeOn(Schedulers.io())
-                                .doOnComplete { resetUnmatchedFlippedCards(flippedCards) }
+                                .doOnComplete {
+                                    resetUnmatchedFlippedCards(flippedCards)
+                                }
+                                .doAfterTerminate { runOnMainThread { isMaxCardsFlipped() } }
                                 .subscribe())
             }
         }
-        broadcastFlipCount()
+    }
+
+    private fun setSelectedCard(card: Card) {
+        selectedCard = card.selectCard()
     }
 
     private fun validateCardMatch(card: Card) {
@@ -85,95 +115,65 @@ class GameViewModel @Inject constructor(
             markAsMatched(card)
         } else {
             updateFlippedCards(card)
-            clearSelectedCard()
         }
     }
 
     private fun markAsMatched(card: Card) {
         updateFlippedCards(card)
-        flippedCards.forEach {
-            updateFlippedCards(it.value.matchCard(true))
-            updateMatchedCards(it.value)
+        flippedCards.values.forEach {
+            val matchedCard = it.matchCard()
+            updateFlippedCards(matchedCard)
+            updateMatchedCards(matchedCard)
         }
     }
 
-
     private fun updateFlippedCards(card: Card) {
-        DEBUG("UPDATING flippedCards")
-        val flippedCard = card.flipCard(true)
+        DEBUG("updating flippedCards")
+        val flippedCard = card.copy(isFlipped = true, isSelected = true)
         flippedCards.put(flippedCard.cardId, flippedCard)
-
         DEBUG("flippedCards = ${flippedCards.values}")
         DEBUG("flippedCards.size = ${flippedCards.size}")
 
-        repository.updateCardFlip(flippedCard, flippedCard.isFlipped)
+        repository.insertCard(flippedCard)
     }
 
-    private fun setSelectedCard(card: Card) {
-        DEBUG("SETTING SELECTED CARD")
-        selectedCard = card
-        DEBUG("SELECTED CARD = $selectedCard")
+    private fun preloadCardImages(cards: List<Card>) {
+        cards.forEach { card -> glideUtils.preloadImages(card.photoUrl) }
     }
 
-    private fun refreshCards() {
-        disposables.add(
-                repository.getSprites()
-                        .subscribeWith(object : DisposableObserver<List<Card>>() {
-                            override fun onNext(cards: List<Card>) {
-                                DEBUG("Received ${cards.size} cards from Repository")
-                                checkIfGameIsOver(cards)
-                                deck.onNext(cards)
-                                gameState.onNext(IN_PROGRESS)
-                                broadcastFlipCount()
-                            }
-
-                            override fun onError(e: Throwable) {
-                                ERROR(e.message.toString())
-                                gameState.onNext(NOT_IN_PROGRESS)
-                            }
-
-                            override fun onComplete() {
-                            }
-                        })
-        )
-    }
+    private fun isGameLoading() = gameState.value == LOADING
 
     private fun resetUnmatchedFlippedCards(flippedCards: HashMap<String, Card>) {
         DEBUG("Resetting unmatched cards in flippedCards : ${flippedCards.keys}")
-        delayedAction { flipUnmatchedCards(flippedCards) }
+        delayedAction({ flipUnmatchedCards(flippedCards) }, ONE_SECOND)
     }
 
-    private fun checkIfGameIsOver(cards: List<Card>) {
-        DEBUG("matchedCards.size = ${matchedCards.size} cards.size = ${cards.size}")
-        if (matchedCards.size == cards.size) {
-            broadcastGameOverState()
+    private fun isGameOver() {
+        DEBUG("matchedCards.size = ${matchedCards.size}")
+        if (matchedCards.size == DECK_SIZE) {
+            broadcastGameState(GAME_OVER)
         }
     }
 
-    private fun broadcastGameOverState() {
-        gameState.onNext(GAME_OVER)
-    }
-
-    private fun updateMatchedCards(card: Card) {
-        val matchedCard = card.matchCard(true)
+    private fun updateMatchedCards(matchedCard: Card) {
         matchedCards.put(matchedCard.cardId, matchedCard)
 
-        DEBUG("$matchedCard added to matchedCards [$matchedCards]")
-
-        DEBUG("matchedCards = ${matchedCards.values}")
+        DEBUG("$matchedCard added to matchedCards")
         DEBUG("matchedCards.size = ${matchedCards.size}")
 
-        repository.updateMatch(matchedCard, true)
+        repository.insertCard(matchedCard)
     }
 
     private fun flipUnmatchedCards(cards: HashMap<String, Card>) {
-        delayedAction {
-            cards.filter { !it.value.isMatched }
-                    .forEach { repository.updateCardFlip(it.value, false) }
-            clearSelectedCard()
-            flippedCards.clear()
-            broadcastFlipCount()
-        }
+        cards.values.filter { !it.isMatched }
+                .forEach {
+                    val resetCard = it.resetCard()
+                    repository.insertCard(resetCard)
+                }
+        clearSelectedCard()
+        flippedCards.clear()
+        runOnMainThread { isMaxCardsFlipped() }
+        isGameOver()
     }
 
     private fun clearSelectedCard() {
@@ -182,11 +182,11 @@ class GameViewModel @Inject constructor(
         DEBUG("SELECTED CARD = $selectedCard")
     }
 
-    private fun isSelected(card: Card): Boolean {
-        return card.cardId == selectedCard?.cardId && !card.isMatched
-    }
+    private fun isNotSelected(card: Card) =
+            !card.isSelected && !card.isMatched
 
     private fun isValidMatch(card: Card): Boolean {
+        DEBUG("SELECTED CARD : $selectedCard \nSECOND CARD : $card")
         DEBUG("isValidMatch = ${selectedCard?.cardId != card.cardId && selectedCard?.spriteId == card.spriteId}")
         return selectedCard?.cardId != card.cardId && selectedCard?.spriteId == card.spriteId
     }
@@ -196,20 +196,32 @@ class GameViewModel @Inject constructor(
         return attemptCount
     }
 
-    private fun broadcastFlipCount() {
-        flippedCardCount.onNext(flippedCards.size)
+    private fun isMaxCardsFlipped() {
+        DEBUG("isMaxCardsFlipped = ${flippedCards.size >= MAX_CARD_FLIPS}")
+        if (flippedCards.size >= MAX_CARD_FLIPS) {
+            broadcastGameState(RESETTING_CARDS)
+        } else {
+            broadcastGameState(IN_PROGRESS)
+        }
     }
 
-    private fun delayedAction(function: () -> Unit) {
+    private fun broadcastGameState(state: GameState) {
+        gameState.value = state
+    }
+
+    private fun delayedAction(function: () -> Unit, delay: Long) {
         disposables.add(
-                Completable.timer(ONE_AND_A_HALF_SECONDS.toLong(), TimeUnit.MILLISECONDS)
-                        .subscribeOn(Schedulers.io())
+                Completable.timer(delay, TimeUnit.MILLISECONDS)
+                        .subscribeOn(AndroidSchedulers.mainThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { function() })
     }
 
     companion object {
-        private const val ONE_AND_A_HALF_SECONDS = 600
+        private const val ONE_SECOND: Long = 1000
+        private const val MAX_CARD_FLIPS = 2
+        private const val DECK_SIZE = 16
+        private const val ZERO = 0
     }
 
     override fun onCleared() {

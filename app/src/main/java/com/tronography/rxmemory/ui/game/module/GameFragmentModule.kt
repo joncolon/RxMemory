@@ -3,6 +3,6 @@ package com.tronography.rxmemory.ui.game.module
 import dagger.Module
 
 @Module
-class GameActivityModule {
+class GameFragmentModule {
     //todo add dependencies
 }

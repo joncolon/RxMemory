@@ -21,30 +21,27 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     androidExtensions {
         experimental = true
     }
-
     dataBinding {
         enabled = true
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:support-annotations:$android_support_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
@@ -62,8 +59,7 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:$android_lifecycle_version"
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-
-    kapt "com.android.databinding:compiler:3.1.1"
+    kapt "com.android.databinding:compiler:3.1.2"
 
     // Dagger dependency
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
@@ -82,7 +78,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 
     // Room
-    implementation "android.arch.persistence.room:runtime:1.0.0"
+    implementation 'android.arch.persistence.room:runtime:1.0.0'
     implementation 'android.arch.persistence.room:rxjava2:1.0.0'
     kapt "android.arch.persistence.room:compiler:1.0.0"
 
@@ -113,6 +109,5 @@ dependencies {
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.6.0'
 
     // Android Debug Database
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.2'
-
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }

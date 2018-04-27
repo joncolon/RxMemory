@@ -25,3 +25,5 @@ proguard/
 captures/
 
 \.idea/
+
+app/app\.iml

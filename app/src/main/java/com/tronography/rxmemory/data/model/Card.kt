@@ -21,22 +21,18 @@ data class Card(
 
         val isFlipped: Boolean = false,
 
-        val isMatched: Boolean = false
+        val isMatched: Boolean = false,
+
+        val isSelected: Boolean = false
 
 ) : Parcelable {
 
-    fun toMutable(): MutableCard {
-        return MutableCard(spriteId, photoUrl, description, cardId, isFlipped, isMatched)
-    }
+    fun toMutable() = MutableCard(spriteId, photoUrl, description, cardId, isFlipped, isMatched, isSelected)
 
-    fun flipCard(flip: Boolean): Card {
-        val cardToFlip = MutableCard(spriteId, photoUrl, description, cardId, flip, isMatched)
-        return cardToFlip.toImmutable()
-    }
+    fun matchCard() = Card(spriteId, photoUrl, description, cardId, isFlipped = true, isSelected = false, isMatched = true)
 
-    fun matchCard(match: Boolean): Card {
-        val cardToMatch = MutableCard(spriteId, photoUrl, description, cardId, isFlipped, match)
-        return cardToMatch.toImmutable()
-    }
+    fun selectCard() = Card(spriteId, photoUrl, description, cardId, isFlipped = true, isSelected = true)
 
+    fun resetCard() = Card(spriteId, photoUrl, description, cardId, isFlipped = false, isSelected = false)
 }
+

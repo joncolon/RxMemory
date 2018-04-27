@@ -8,14 +8,14 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.pokedex.GameViewModel" />
+            type="com.tronography.rxmemory.ui.game.GameViewModel" />
 
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.pokedex.GameActivity">
+        tools:context=".ui.game.GameActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

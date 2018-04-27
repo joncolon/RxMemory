@@ -1,6 +1,7 @@
-package com.tronography.rxmemory.ui.pokedex
+package com.tronography.rxmemory.ui.game
 
 import DEBUG
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -9,15 +10,12 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.ActivityGameBinding
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.pokedex.gameover.GameOverFragment
+import com.tronography.rxmemory.ui.game.gameover.GameOverFragment
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import toast
 import javax.inject.Inject
 
@@ -44,7 +42,7 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>(), HasSupp
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showGameFragment()
-        subscribeToGameState()
+        observeGameState()
     }
 
     private fun showGameFragment() {
@@ -69,29 +67,27 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>(), HasSupp
         DEBUG("Disposables cleared : ${disposables.isDisposed}")
     }
 
-    private fun subscribeToGameState(): Disposable? {
-        return viewModel.getGameState()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { gameState ->
-                    DEBUG("GAME STATE : ${gameState}")
-                    when (gameState) {
+    private fun observeGameState() {
+        viewModel.getGameState().observe(this, Observer { gameState ->
+            DEBUG("GAME STATE : ${gameState}")
 
-                        GAME_OVER -> {
-                            this.toast("GAME OVER")
-                            disableBlueIndicator()
-                            showGameOverFragment()
-                        }
-
-                        IN_PROGRESS -> {
-                            enableBlueIndicator()
-                        }
-
-                        RESTARTING -> {
-                            showGameFragment()
-                        }
-                    }
+            when (gameState) {
+                GAME_OVER -> {
+                    this.toast("GAME OVER")
+                    disableBlueIndicator()
+                    showGameOverFragment()
                 }
+
+                IN_PROGRESS -> {
+                    enableBlueIndicator()
+                }
+
+                RESTARTING -> {
+                    showGameFragment()
+                    disableBlueIndicator()
+                }
+            }
+        })
     }
 
     private fun enableBlueIndicator() {

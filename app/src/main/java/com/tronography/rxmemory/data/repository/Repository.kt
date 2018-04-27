@@ -2,6 +2,7 @@ package com.tronography.rxmemory.data.repository
 
 
 import DEBUG
+import android.arch.lifecycle.LiveData
 import com.tronography.rxmemory.data.http.HttpConstants
 import com.tronography.rxmemory.data.http.PokeClient
 import com.tronography.rxmemory.data.local.CardDao
@@ -13,6 +14,7 @@ import executeInThread
 import io.reactivex.Observable
 import io.reactivex.Observable.fromCallable
 import io.reactivex.Observable.just
+import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,8 +34,9 @@ constructor(
 
 ) {
 
-    fun deleteCardTable() {
-        executeInThread { cardDao.deleteTable() }
+    fun deleteCardTable(): Observable<Unit>? {
+        return Observable.fromCallable { cardDao.deleteTable() }
+                .subscribeOn(Schedulers.io())
     }
 
     fun updateMatch(card: Card, isMatched: Boolean) {
@@ -44,20 +47,40 @@ constructor(
         executeInThread { cardDao.updateCardFlip(card.cardId, isFlipped) }
     }
 
-    fun getCards(): Observable<List<Card>> {
-        return getSpritesFromDB()
-                .subscribeOn(Schedulers.io())
-                .flatMap { sprites ->
-                    if (sprites.isEmpty()) {
-                        return@flatMap downloadSprites()
-                    } else
-                        return@flatMap just(sprites)
-                }
-                .concatMap { sprites -> fromCallable { updateCardDatabase(sprites) } }
-                .switchMap { cardDao.getAllCards().toObservable() }
+    fun insertCard(card: Card) {
+        executeInThread { cardDao.insert(card.toMutable()) }
     }
 
-    private fun downloadSprites(): Observable<List<Sprite>> {
+    fun getCards(): LiveData<List<Card>> {
+        createNewDeck()
+        return cardDao.getAllCards()
+    }
+
+    fun createNewDeck() {
+        deleteCardTable()
+                ?.flatMap { return@flatMap getSpritesFromDB() }
+                ?.flatMap { sprites ->
+                    if (sprites.isEmpty()) {
+                        return@flatMap getSpritesFromAPI()
+                    } else
+                        return@flatMap just(sprites)
+                }?.subscribeWith(object : DisposableObserver<List<Sprite>>() {
+                    override fun onComplete() {
+
+                    }
+
+                    override fun onNext(t: List<Sprite>) {
+                        executeInThread { updateCardDatabase(t) }
+                    }
+
+                    override fun onError(e: Throwable) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+    }
+
+
+    private fun getSpritesFromAPI(): Observable<List<Sprite>> {
         return client.getSprites()
                 .subscribeOn(Schedulers.io())
                 .toObservable()

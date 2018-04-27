@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.pokedex.adapter
+package com.tronography.rxmemory.ui.game.adapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

@@ -1,6 +1,6 @@
-package com.tronography.rxmemory.ui.pokedex.module
+package com.tronography.rxmemory.ui.game.module
 
-import com.tronography.rxmemory.ui.pokedex.GameFragment
+import com.tronography.rxmemory.ui.game.GameFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

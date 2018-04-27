@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.pokedex.adapter
+package com.tronography.rxmemory.ui.game.adapter
 
 import DEBUG
 import android.support.constraint.ConstraintLayout
@@ -10,8 +10,8 @@ import android.widget.ImageView
 import com.tronography.rxmemory.data.model.Card
 import com.tronography.rxmemory.databinding.CardBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
-import com.tronography.rxmemory.ui.pokedex.GameViewModel
-import com.tronography.rxmemory.ui.pokedex.listeners.OnCardClickedListener
+import com.tronography.rxmemory.ui.game.GameViewModel
+import com.tronography.rxmemory.ui.game.listeners.OnCardClickedListener
 import java.util.*
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
     override fun onCardClicked(card: Card) {
         DEBUG("ADAPTER CLICKABLE : $isClickable")
         if (isClickable) {
-            gameViewModel.selectCard(card)
+            gameViewModel.onCardClicked(card)
         }
     }
 

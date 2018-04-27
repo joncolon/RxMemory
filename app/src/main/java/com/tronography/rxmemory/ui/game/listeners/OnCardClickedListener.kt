@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.pokedex.listeners
+package com.tronography.rxmemory.ui.game.listeners
 
 import com.tronography.rxmemory.data.model.Card
 

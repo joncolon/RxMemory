@@ -20,9 +20,20 @@ class MutableCard(
 
         var isFlipped: Boolean,
 
-        var isMatched: Boolean
+        var isMatched: Boolean,
+
+        var isSelected: Boolean
+
 ) {
     fun toImmutable(): Card {
-        return Card(spriteId, photoUrl, description, cardId, isFlipped, isMatched)
+        return Card(
+                spriteId,
+                photoUrl,
+                description,
+                cardId,
+                isFlipped,
+                isMatched,
+                isSelected
+        )
     }
 }

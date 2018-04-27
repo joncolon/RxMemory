@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.pokedex.gameover
+package com.tronography.rxmemory.ui.game.gameover
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentGameOverBinding
-import com.tronography.rxmemory.ui.pokedex.GameViewModel
+import com.tronography.rxmemory.ui.game.GameViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject

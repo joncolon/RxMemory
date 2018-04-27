@@ -1,6 +1,7 @@
-package com.tronography.rxmemory.ui.pokedex
+package com.tronography.rxmemory.ui.game
 
 import DEBUG
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.databinding.DataBindingUtil
@@ -14,21 +15,19 @@ import android.view.ViewGroup
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.model.Card
-import com.tronography.rxmemory.data.state.GameState
+import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
+import com.tronography.rxmemory.ui.game.adapter.GameAdapter
+import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
-import com.tronography.rxmemory.ui.pokedex.adapter.GameAdapter
-import com.tronography.rxmemory.ui.pokedex.adapter.GameItemAnimator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import com.tronography.rxmemory.utilities.DiffCallback
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import toast
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GameFragment : Fragment() {
 
     @Inject
@@ -70,7 +69,7 @@ class GameFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         setUpRecyclerView()
-        setUpSubscriptions()
+        observeLiveData()
     }
 
     private fun performDependencyInjection() {
@@ -78,6 +77,7 @@ class GameFragment : Fragment() {
     }
 
     companion object {
+        private const val MAX_FLIP_COUNT = 2
         const val TAG = "GameFragment"
         fun newInstance(): GameFragment {
             return GameFragment()
@@ -90,61 +90,67 @@ class GameFragment : Fragment() {
         DEBUG("Disposables cleared : ${disposables.isDisposed}")
     }
 
-    private fun setUpSubscriptions() {
-        disposables.addAll(
-                subscribeToDeck(),
-                subscribeToFlipCount(),
-                subscribeToGameState()
-        )
+    private fun observeLiveData() {
+        observeGameState()
+        observeFlipCount()
+        observeLiveDeck()
     }
 
-    private fun subscribeToDeck(): Disposable? {
-        DEBUG("subscribing to deck")
-        return viewModel.getDeck()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { cards ->
-                    cards?.let {
-                        DEBUG("${cards.size} cards received ")
-                        updateList(cards)
-                    }
-                }
-    }
-
-    private fun subscribeToFlipCount(): Disposable? {
+    private fun observeFlipCount() {
         DEBUG("subscribing to flip count")
-        return viewModel.getFlippedCardCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { count ->
+        viewModel.observeFlipCount()
+                .observe(this, Observer { count ->
                     DEBUG("$count FLIPPED CARDS")
-                    if (count < 2) {
-                        adapter.enableCardClick()
-                    } else {
-                        adapter.disableCardClicks()
+                    count?.let {
+                        when {
+                            count < MAX_FLIP_COUNT -> adapter.enableCardClick()
+                            else -> adapter.disableCardClicks()
+                        }
+                        DEBUG("ADAPTER CLICKABLE = ${adapter.isClickable}")
                     }
-                    DEBUG("ADAPTER CLICKABLE = ${adapter.isClickable}")
+
                 }
+                )
     }
 
-    private fun subscribeToGameState(): Disposable? {
+    private fun observeLiveDeck() {
+        viewModel.observeDeck().observe(this, Observer { cards ->
+            cards?.let {
+                DEBUG("$cards received ")
+                when (cards.size == 16) {
+                    true -> updateList(cards)
+                }
+            }
+        })
+    }
+
+    private fun observeGameState() {
         DEBUG("subscribing to game state")
-        return viewModel.getGameState()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { gameState ->
-                    DEBUG("GAME STATE : ${gameState.name}")
+        viewModel.getGameState()
+                .observe(this, Observer { gameState ->
+                    DEBUG("GAME STATE : ${gameState}")
                     when (gameState) {
-                        GameState.GAME_OVER -> {
-                            activity?.toast("GAME OVER")
+
+                        GAME_OVER -> {
                             adapter.disableCardClicks()
                             onDestroy()
                         }
 
-                        GameState.IN_PROGRESS -> {
+                        IN_PROGRESS -> {
                             adapter.enableCardClick()
                         }
+
+                        NOT_IN_PROGRESS -> adapter.disableCardClicks()
+
+                        LOADING -> adapter.disableCardClicks()
+
+                        RESETTING_CARDS -> adapter.disableCardClicks()
+
+                        else -> {
+                            //do nothing
+                        }
                     }
-                }
+                })
     }
 
     private fun setUpRecyclerView() {
@@ -169,4 +175,6 @@ class GameFragment : Fragment() {
         super.onDestroy()
         clearDisposables()
     }
+
+
 }

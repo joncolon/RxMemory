@@ -11,10 +11,6 @@ enum class GameState {
 
     GAME_OVER,
 
-    FIRST_FLIP,
-
-    SECOND_FLIP,
-
     MATCH_FOUND,
 
     RESETTING_CARDS,

@@ -4,7 +4,7 @@ package com.tronography.rxmemory.data.repository
 import DEBUG
 import ERROR
 import android.arch.lifecycle.LiveData
-import com.tronography.rxmemory.data.http.PokeClient
+import com.tronography.rxmemory.data.remote.PokeClient
 import com.tronography.rxmemory.data.local.CardDao
 import com.tronography.rxmemory.data.local.MutableCard
 import com.tronography.rxmemory.data.local.MutablePokemon

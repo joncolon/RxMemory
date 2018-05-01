@@ -32,7 +32,6 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameViewModel>(), HasSupp
     override val bindingVariable: Int
         get() = BR.viewModel
 
-
     override val layoutId: Int
         get() = R.layout.activity_game
 

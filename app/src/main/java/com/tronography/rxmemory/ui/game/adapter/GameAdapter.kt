@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.databinding.CardBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
 import com.tronography.rxmemory.ui.game.GameViewModel

@@ -1,6 +1,6 @@
 package com.tronography.rxmemory.ui.game.listeners
 
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 
 
 interface OnCardClickedListener {

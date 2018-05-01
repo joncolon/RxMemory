@@ -4,7 +4,7 @@ import DEBUG
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.repository.Repository
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.data.state.GameState.*
@@ -28,35 +28,31 @@ class GameViewModel
 
 
     private var gameState = MutableLiveData<GameState>()
-    private var flippedCardCount = MutableLiveData<Int>()
 
     private val matchedCards = HashMap<String, Card>()
     private val flippedCards = HashMap<String, Card>()
 
-    private var selectedCard: Card? = null
+    private var firstCard: Card? = null
 
     private var attemptCount: Int
 
     private val disposables = CompositeDisposable()
 
     init {
-        broadcastGameState(NOT_IN_PROGRESS)
         DEBUG("Initializing GameViewModel")
-        attemptCount = ZERO
+        broadcastGameState(NOT_IN_PROGRESS)
         refreshCards()
+        attemptCount = ZERO
     }
 
     fun observeDeck(): LiveData<List<Card>> {
         return repository.getCards()
     }
 
-    fun observeFlipCount(): LiveData<Int> {
-        return flippedCardCount
-    }
-
     fun refreshCards() {
+        DEBUG("refreshCards called")
         broadcastGameState(IN_PROGRESS)
-        repository.createNewDeck()
+        repository.createNewPokemonDeck()
     }
 
     fun getAttemptCount(): Int {
@@ -88,14 +84,16 @@ class GameViewModel
     private fun selectCard(card: Card) {
         when (flippedCards.isEmpty()) {
             true -> {
-                setSelectedCard(card)
-                selectedCard?.let { updateFlippedCards(it) }
+                setSelectedCard(card.selectCard())
+                firstCard?.let { updateFlippedCards(it) }
             }
             false -> {
+                val secondCard = card.selectCard()
+                updateFlippedCards(secondCard)
                 incrementAttemptCount()
                 isMaxCardsFlipped()
                 disposables.add(
-                        Completable.fromAction { validateCardMatch(card) }
+                        Completable.fromAction { validateCardMatch(secondCard) }
                                 .subscribeOn(Schedulers.io())
                                 .doOnComplete {
                                     resetUnmatchedFlippedCards(flippedCards)
@@ -107,7 +105,7 @@ class GameViewModel
     }
 
     private fun setSelectedCard(card: Card) {
-        selectedCard = card.selectCard()
+        firstCard = card
     }
 
     private fun validateCardMatch(card: Card) {
@@ -119,22 +117,24 @@ class GameViewModel
     }
 
     private fun markAsMatched(card: Card) {
-        updateFlippedCards(card)
-        flippedCards.values.forEach {
-            val matchedCard = it.matchCard()
-            updateFlippedCards(matchedCard)
-            updateMatchedCards(matchedCard)
-        }
+        Completable.fromAction { updateFlippedCards(card.matchCard()) }
+                .doAfterTerminate {
+                    flippedCards.values.forEach {
+                        val matchedCard = it.matchCard()
+                        updateFlippedCards(matchedCard)
+                        updateMatchedCards(matchedCard)
+                    }
+                }.subscribe()
+
     }
 
     private fun updateFlippedCards(card: Card) {
         DEBUG("updating flippedCards")
-        val flippedCard = card.copy(isFlipped = true, isSelected = true)
-        flippedCards.put(flippedCard.cardId, flippedCard)
+        flippedCards.put(card.cardId, card)
         DEBUG("flippedCards = ${flippedCards.values}")
         DEBUG("flippedCards.size = ${flippedCards.size}")
 
-        repository.insertCard(flippedCard)
+        repository.insertCard(card)
     }
 
     private fun preloadCardImages(cards: List<Card>) {
@@ -178,17 +178,17 @@ class GameViewModel
 
     private fun clearSelectedCard() {
         DEBUG("CLEARING SELECTED CARD")
-        selectedCard = null
-        DEBUG("SELECTED CARD = $selectedCard")
+        firstCard = null
+        DEBUG("SELECTED CARD = $firstCard")
     }
 
     private fun isNotSelected(card: Card) =
             !card.isSelected && !card.isMatched
 
     private fun isValidMatch(card: Card): Boolean {
-        DEBUG("SELECTED CARD : $selectedCard \nSECOND CARD : $card")
-        DEBUG("isValidMatch = ${selectedCard?.cardId != card.cardId && selectedCard?.spriteId == card.spriteId}")
-        return selectedCard?.cardId != card.cardId && selectedCard?.spriteId == card.spriteId
+        DEBUG("SELECTED CARD : $firstCard \nSECOND CARD : $card")
+        DEBUG("isValidMatch = ${firstCard?.cardId != card.cardId && firstCard?.pokemonId == card.pokemonId}")
+        return firstCard?.cardId != card.cardId && firstCard?.pokemonId == card.pokemonId
     }
 
     private fun incrementAttemptCount(): Int {

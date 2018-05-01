@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game
+package com.tronography.rxmemory.ui.game.activity
 
 import DEBUG
 import android.arch.lifecycle.Observer
@@ -10,7 +10,9 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.ActivityGameBinding
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.game.gameover.GameOverFragment
+import com.tronography.rxmemory.ui.game.fragments.GameFragment
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
+import com.tronography.rxmemory.ui.game.fragments.GameOverFragment
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector

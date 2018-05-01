@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game
+package com.tronography.rxmemory.ui.game.viewmodel
 
 import DEBUG
 import android.arch.lifecycle.LiveData

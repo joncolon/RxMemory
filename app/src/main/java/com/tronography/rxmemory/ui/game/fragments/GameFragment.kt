@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game
+package com.tronography.rxmemory.ui.game.fragments
 
 import DEBUG
 import android.arch.lifecycle.Observer
@@ -17,6 +17,7 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.game.adapter.GameAdapter
 import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager

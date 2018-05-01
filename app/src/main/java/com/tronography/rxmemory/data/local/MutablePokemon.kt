@@ -38,7 +38,6 @@ class MutablePokemon(
                 height,
                 caught,
                 encountered
-
         )
     }
 

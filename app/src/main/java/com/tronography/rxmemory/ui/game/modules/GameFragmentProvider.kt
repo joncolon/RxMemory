@@ -1,6 +1,6 @@
-package com.tronography.rxmemory.ui.game.module
+package com.tronography.rxmemory.ui.game.modules
 
-import com.tronography.rxmemory.ui.game.GameFragment
+import com.tronography.rxmemory.ui.game.fragments.GameFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

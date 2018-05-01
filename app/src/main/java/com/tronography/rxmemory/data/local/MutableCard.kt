@@ -2,14 +2,14 @@ package com.tronography.rxmemory.data.local
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 import java.util.*
 
 
 @Entity(tableName = AppDatabase.CARD_TABLE)
 class MutableCard(
 
-        var spriteId: Int,
+        var pokemonId: Int,
 
         var photoUrl: String,
 
@@ -27,7 +27,7 @@ class MutableCard(
 ) {
     fun toImmutable(): Card {
         return Card(
-                spriteId,
+                pokemonId,
                 photoUrl,
                 description,
                 cardId,

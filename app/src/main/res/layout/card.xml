@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.data.model.Card" />
+            type="com.tronography.rxmemory.data.model.cards.Card" />
 
     </data>
 

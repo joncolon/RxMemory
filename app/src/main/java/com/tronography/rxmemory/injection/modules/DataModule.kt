@@ -4,7 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import com.tronography.rxmemory.data.local.AppDatabase
 import com.tronography.rxmemory.data.local.CardDao
-import com.tronography.rxmemory.data.local.SpriteDao
+import com.tronography.rxmemory.data.local.PokemonDao
 import com.tronography.rxmemory.injection.annotations.DatabaseInfo
 import dagger.Module
 import dagger.Provides
@@ -22,8 +22,8 @@ class DataModule {
 
     @Provides
     @Singleton
-    internal fun provideSpriteDao(appDatabase: AppDatabase): SpriteDao {
-        return appDatabase.spriteDao()
+    internal fun providePokemonDao(appDatabase: AppDatabase): PokemonDao {
+        return appDatabase.pokemonDao()
     }
 
     @Provides

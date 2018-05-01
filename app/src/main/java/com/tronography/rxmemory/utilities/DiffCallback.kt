@@ -1,7 +1,7 @@
 package com.tronography.rxmemory.utilities
 
 import android.support.v7.util.DiffUtil
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 
 
 class DiffCallback(private var newCards: List<Card>, private var oldCards: List<Card>) : DiffUtil.Callback() {
@@ -16,7 +16,7 @@ class DiffCallback(private var newCards: List<Card>, private var oldCards: List<
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCards[oldItemPosition].spriteId == newCards[newItemPosition].spriteId
+        return oldCards[oldItemPosition].pokemonId == newCards[newItemPosition].pokemonId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

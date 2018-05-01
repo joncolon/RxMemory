@@ -46,10 +46,6 @@ class SpanningGridLayoutManager : GridLayoutManager {
         return spanLayoutSize(super.generateLayoutParams(lp))
     }
 
-    override fun checkLayoutParams(lp: RecyclerView.LayoutParams?): Boolean {
-        return super.checkLayoutParams(lp)
-    }
-
     private fun spanLayoutSize(layoutParams: RecyclerView.LayoutParams): RecyclerView.LayoutParams {
         if (orientation == LinearLayoutManager.HORIZONTAL) {
             layoutParams.width = Math.round(horizontalSpace / Math.ceil((itemCount / spanCount).toDouble())).toInt()

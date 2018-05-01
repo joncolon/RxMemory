@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game
+package com.tronography.rxmemory.ui.game.fragments
 
 import DEBUG
 import android.arch.lifecycle.Observer
@@ -14,9 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.game.adapter.GameAdapter
 import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
@@ -78,14 +79,6 @@ class GameFragment : Fragment() {
         AndroidSupportInjection.inject(this)
     }
 
-    companion object {
-        private const val MAX_FLIP_COUNT = 2
-        const val TAG = "GameFragment"
-        fun newInstance(): GameFragment {
-            return GameFragment()
-        }
-    }
-
     private fun clearDisposables() {
         DEBUG("Clearing Disposables")
         disposables.dispose()
@@ -94,32 +87,15 @@ class GameFragment : Fragment() {
 
     private fun observeLiveData() {
         observeGameState()
-        observeFlipCount()
         observeLiveDeck()
-    }
-
-    private fun observeFlipCount() {
-        DEBUG("subscribing to flip count")
-        viewModel.observeFlipCount()
-                .observe(this, Observer { count ->
-                    DEBUG("$count FLIPPED CARDS")
-                    count?.let {
-                        when {
-                            count < MAX_FLIP_COUNT -> adapter.enableCardClick()
-                            else -> adapter.disableCardClicks()
-                        }
-                        DEBUG("ADAPTER CLICKABLE = ${adapter.isClickable}")
-                    }
-
-                }
-                )
     }
 
     private fun observeLiveDeck() {
         viewModel.observeDeck().observe(this, Observer { cards ->
+            DEBUG("${cards?.size} received ")
+
             cards?.let {
-                DEBUG("$cards received ")
-                when (cards.size == 16) {
+                when (cards.size == FULL_DECK_SIZE) {
                     true -> updateList(cards)
                 }
             }
@@ -127,7 +103,6 @@ class GameFragment : Fragment() {
     }
 
     private fun observeGameState() {
-        DEBUG("subscribing to game state")
         viewModel.getGameState()
                 .observe(this, Observer { gameState ->
                     DEBUG("GAME STATE : ${gameState}")
@@ -176,6 +151,18 @@ class GameFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         clearDisposables()
+    }
+
+    companion object {
+
+        private const val FULL_DECK_SIZE = 16
+
+        const val TAG = "GameFragment"
+
+        fun newInstance(): GameFragment {
+            return GameFragment()
+        }
+
     }
 
 

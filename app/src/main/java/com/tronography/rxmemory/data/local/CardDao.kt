@@ -3,7 +3,7 @@ package com.tronography.rxmemory.data.local
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import com.tronography.rxmemory.data.model.Card
+import com.tronography.rxmemory.data.model.cards.Card
 import io.reactivex.Single
 
 

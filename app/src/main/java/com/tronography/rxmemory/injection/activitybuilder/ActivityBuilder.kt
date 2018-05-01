@@ -1,9 +1,9 @@
 package com.tronography.rxmemory.injection.activitybuilder
 
-import com.tronography.rxmemory.ui.game.GameActivity
-import com.tronography.rxmemory.ui.game.gameover.GameOverFragmentProvider
-import com.tronography.rxmemory.ui.game.module.GameActivityModule
-import com.tronography.rxmemory.ui.game.module.GameFragmentProvider
+import com.tronography.rxmemory.ui.game.activity.GameActivity
+import com.tronography.rxmemory.ui.game.modules.GameOverFragmentProvider
+import com.tronography.rxmemory.ui.game.modules.GameActivityModule
+import com.tronography.rxmemory.ui.game.modules.GameFragmentProvider
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

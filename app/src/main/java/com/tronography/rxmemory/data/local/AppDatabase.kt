@@ -5,7 +5,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 
 @Database(
-        entities = [(MutableCard::class), (MutableSprite::class)],
+        entities = [(MutableCard::class), (MutablePokemon::class)],
         version = 1,
         exportSchema = false
 )
@@ -13,12 +13,12 @@ import android.arch.persistence.room.TypeConverters
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun cardDao(): CardDao
-    abstract fun spriteDao(): SpriteDao
+    abstract fun pokemonDao(): PokemonDao
 
     companion object {
         const val FILENAME: String = "AppDatabase.db"
         const val CARD_TABLE = "cards"
-        const val SPRITE_TABLE = "sprites"
+        const val POKEMON_TABLE = "pokemon"
     }
 
 }

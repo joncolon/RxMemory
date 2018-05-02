@@ -92,6 +92,7 @@ constructor(
                 .toObservable()
                 .concatMap { pokemon: List<MutablePokemon> -> fromCallable { updatePokemonDatabase(pokemon) } }
                 .switchMap { getEightPokemonFromDB() }
+                .retry(5)
     }
 
     private fun getEightPokemonFromDB(): Observable<List<Pokemon>> {

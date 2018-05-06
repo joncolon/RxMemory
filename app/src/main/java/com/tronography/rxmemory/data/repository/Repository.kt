@@ -30,8 +30,7 @@ import javax.inject.Singleton
 
 @Singleton
 class Repository
-@Inject
-constructor(
+@Inject constructor(
 
         private val liveGameState : GameStateLiveData,
 
@@ -91,7 +90,7 @@ constructor(
                     }
 
                     override fun onNext(t: Unit) {
-                        liveGameState.setGameStateLiveData(GameState.IN_PROGRESS)
+                        liveGameState.setGameStateLiveData(GameState.LOAD_COMPLETE)
                     }
 
                     override fun onError(e: Throwable) {
@@ -102,7 +101,6 @@ constructor(
     }
 
     fun getPokemonFromApi(limit: Int, offset: Int): Observable<List<Pokemon>> {
-        liveNetworkState.setNetworkState(NetworkState.LOADING)
         return client.getPokemonList(limit, offset)
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe { DEBUG("Starting at offset $offset on thread ${Thread.currentThread().name}") }

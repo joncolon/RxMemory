@@ -12,6 +12,7 @@ import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.model.cards.Card
@@ -66,9 +67,8 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
-        adapter = GameAdapter(viewModel)
+        initAdapter()
         observeLiveData()
-        setUpRecyclerView()
     }
 
     private fun performDependencyInjection() {
@@ -98,21 +98,22 @@ class GameFragment : Fragment() {
                     DEBUG("GAME STATE : ${gameState}")
                     when (gameState) {
 
+                        LOADING -> {
+                            //todo: show loading status
+                        }
+
+                        LOAD_COMPLETE -> {
+                            setUpRecyclerView()
+                        }
+
+                        IN_PROGRESS -> adapter.enableCardClick()
+
+                        RESETTING_CARDS -> adapter.disableCardClicks()
+
                         GAME_OVER -> {
                             adapter.disableCardClicks()
                             showGameOverFragment()
                         }
-
-                        IN_PROGRESS -> {
-                            adapter.enableCardClick()
-                        }
-
-                        NOT_IN_PROGRESS -> adapter.disableCardClicks()
-
-                        LOADING -> adapter.disableCardClicks()
-
-                        RESETTING_CARDS -> adapter.disableCardClicks()
-
 
                     }
                 })
@@ -125,17 +126,22 @@ class GameFragment : Fragment() {
     private fun setUpRecyclerView() {
         activity?.let {
             DEBUG("Setting up RecyclerView...")
-            viewDataBinding.recyclerView.adapter = adapter
-            viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
-            spanningGridLayoutManager = SpanningGridLayoutManager(it, 4)
+            spanningGridLayoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
             viewDataBinding.recyclerView.layoutManager = spanningGridLayoutManager
+            viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
+            viewDataBinding.recyclerView.itemAnimator.addDuration = 0
+            viewDataBinding.recyclerView.adapter = adapter
         }
+    }
+
+    private fun initAdapter() {
+        adapter = GameAdapter(viewModel)
     }
 
     private fun updateList(cards: List<Card>) {
         DEBUG("ADAPTER UPDATED...")
         val oldCards = adapter.cards
-        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(cards, oldCards))
+        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(cards, oldCards), false)
         adapter.clearItems()
         adapter.addItems(cards)
         result.dispatchUpdatesTo(adapter)
@@ -149,10 +155,6 @@ class GameFragment : Fragment() {
     companion object {
         private const val FULL_DECK_SIZE = 16
         const val TAG = "GameFragment"
-
-        fun newInstance(): GameFragment {
-            return GameFragment()
-        }
     }
 
 }

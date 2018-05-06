@@ -2,7 +2,6 @@ package com.tronography.rxmemory.data.local
 
 import android.arch.persistence.room.*
 import com.tronography.rxmemory.data.model.pokemon.Pokemon
-import io.reactivex.Observable
 import io.reactivex.Single
 
 
@@ -23,6 +22,12 @@ abstract class PokemonDao {
 
     @Query("DELETE FROM ${AppDatabase.POKEMON_TABLE}")
     abstract fun deleteTable()
+
+    @Query("UPDATE ${AppDatabase.POKEMON_TABLE} SET encountered = :encountered  WHERE id = :id")
+    abstract fun updateEncountered(id: String, encountered: Boolean)
+
+    @Query("UPDATE ${AppDatabase.POKEMON_TABLE} SET caught = :caught  WHERE id = :id")
+    abstract fun updateCaught(id: String, caught: Boolean)
 
     @Delete
     abstract fun delete(pokemon: MutablePokemon)

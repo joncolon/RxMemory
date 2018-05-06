@@ -9,12 +9,10 @@ enum class GameState {
 
     IN_PROGRESS,
 
-    GAME_OVER,
-
-    MATCH_FOUND,
-
     RESETTING_CARDS,
 
-    RESTARTING
+    GAME_OVER,
+
+    ERROR
 
 }

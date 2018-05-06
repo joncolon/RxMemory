@@ -33,7 +33,7 @@ data class Pokemon(
 
         val caught: Boolean = false,
 
-        val encountered: Boolean = true
+        val encountered: Boolean = false
 
 ) : Parcelable {
     fun toMutable(): MutablePokemon = MutablePokemon(

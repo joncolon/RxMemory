@@ -41,17 +41,6 @@ class GameItemAnimator : DefaultItemAnimator() {
         return super.recordPreLayoutInformation(state, viewHolder, changeFlags, payloads)
     }
 
-    override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
-        if (viewHolder.layoutPosition > lastAddAnimatedItem) {
-            lastAddAnimatedItem++
-            runEnterAnimation(viewHolder as GameAdapter.CardViewHolder)
-            return false
-        }
-
-        dispatchAddFinished(viewHolder)
-        return false
-    }
-
 
     private fun animateFlipRevealCardFront(holder: GameAdapter.CardViewHolder) {
         val animatorSet = AnimatorSet()

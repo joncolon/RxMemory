@@ -1,15 +1,15 @@
-package com.tronography.rxmemory.data.species
+package com.tronography.rxmemory.data.model.species
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Color(
+data class Language(
 
         @field:SerializedName("name")
-        val name: String? = null,
+        val name: String,
 
         @field:SerializedName("url")
-        val url: String? = null
+        val url: String
 ) : Parcelable

@@ -1,130 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.game.viewmodel.GameViewModel" />
+            type="com.tronography.rxmemory.ui.game.viewmodel.GameViewModel"/>
 
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/card_layout"
+        android:id="@+id/card_front_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite">
+        android:elevation="@dimen/no_elevation"
+        android:padding="16dp">
 
+        <TextView
+            android:id="@+id/you_won_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:gravity="center_horizontal"
+            android:text="@string/you_won"
+            android:textColor="@color/colorTextDark"
+            android:textSize="@dimen/medium_font"
+            app:layout_constraintBottom_toTopOf="@id/try_again_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"/>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/card_front_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="@dimen/no_elevation"
-            android:padding="16dp">
+        <TextView
+            android:id="@+id/attempt_count_value_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:text="0"
+            android:textColor="@color/colorTextDark"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/attempt_count_tv"
+            app:layout_constraintTop_toBottomOf="@id/you_won_tv"/>
 
-            <TextView
-                android:id="@+id/you_won_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:gravity="center_horizontal"
-                android:text="@string/you_won"
-                android:textColor="@color/colorTextDark"
-                android:textSize="@dimen/medium_font"
-                app:layout_constraintBottom_toTopOf="@id/try_again_tv"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="spread" />
+        <TextView
+            android:id="@+id/attempt_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:text="Attempt Count: "
+            android:textColor="@color/colorTextDark"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@id/attempt_count_value_tv"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/you_won_tv"/>
 
-            <TextView
-                android:id="@+id/attempt_count_value_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:text="0"
-                android:textColor="@color/colorTextDark"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toEndOf="@id/attempt_count_tv"
-                app:layout_constraintTop_toBottomOf="@id/you_won_tv" />
+        <TextView
+            android:id="@+id/try_again_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:gravity="center_horizontal"
+            android:text="@string/try_again"
+            android:textColor="@color/colorTextDark"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/attempt_count_tv"/>
 
-            <TextView
-                android:id="@+id/attempt_count_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:text="Attempt Count: "
-                android:textColor="@color/colorTextDark"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toStartOf="@id/attempt_count_value_tv"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/you_won_tv" />
+        <Button
+            android:id="@+id/yes_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_font"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:text="@string/yes"
+            android:textColor="@color/colorTextDark"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/no_button"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/try_again_tv"/>
 
-            <TextView
-                android:id="@+id/try_again_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:gravity="center_horizontal"
-                android:text="@string/try_again"
-                android:textColor="@color/colorTextDark"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/attempt_count_tv" />
+        <Button
+            android:id="@+id/no_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_font"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:text="@string/no"
+            android:textColor="@color/colorTextDark"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/yes_button"
+            app:layout_constraintTop_toBottomOf="@id/try_again_tv"/>
 
-            <Button
-                android:id="@+id/yes_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_font"
-                android:background="@drawable/button_background"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:text="@string/yes"
-                android:textColor="@color/colorTextDark"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/no_button"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/try_again_tv" />
-
-            <Button
-                android:id="@+id/no_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_font"
-                android:background="@drawable/button_background"
-                android:fontFamily="@font/pokemon_gameboy"
-                android:text="@string/no"
-                android:textColor="@color/colorTextDark"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintHorizontal_weight="1"
-                app:layout_constraintStart_toEndOf="@id/yes_button"
-                app:layout_constraintTop_toBottomOf="@id/try_again_tv" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/end_guideline"
-                android:layout_width="1dp"
-                android:layout_height="1dp"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="4" />
-
-        </android.support.constraint.ConstraintLayout>
-
+        <android.support.constraint.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="4"/>
 
     </android.support.constraint.ConstraintLayout>
+
 
 </layout>
 

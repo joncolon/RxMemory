@@ -21,15 +21,17 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
 
     fun enableCardClick() {
         isClickable = true
+        DEBUG("ADAPTER CLICKABLE : $isClickable")
     }
 
     fun disableCardClicks() {
         isClickable = false
+        DEBUG("ADAPTER CLICKABLE : $isClickable")
     }
 
     override fun onCardClicked(card: Card) {
-        DEBUG("ADAPTER CLICKABLE : $isClickable")
         if (isClickable) {
+            DEBUG("Click Successful")
             gameViewModel.onCardClicked(card)
         }
     }

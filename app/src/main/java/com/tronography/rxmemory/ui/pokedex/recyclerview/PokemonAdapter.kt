@@ -23,23 +23,9 @@ class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
         this.pokedexEntries = ArrayList()
     }
 
-    var isClickable: Boolean = true
-
-    fun enableCardClick() {
-        isClickable = true
-        DEBUG("ADAPTER CLICKABLE : $isClickable")
-    }
-
-    fun disableCardClicks() {
-        isClickable = false
-        DEBUG("ADAPTER CLICKABLE : $isClickable")
-    }
-
     override fun onPokemonClicked(pokemon: Pokemon) {
-        if (isClickable) {
             DEBUG("Click Successful")
             pokedexViewModel.onPokemonClicked(pokemon)
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

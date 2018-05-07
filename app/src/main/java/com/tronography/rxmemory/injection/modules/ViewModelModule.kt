@@ -8,6 +8,8 @@ import com.tronography.rxmemory.ui.game.viewmodel.GameActivityViewModel
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
 import com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel
+import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexActivityViewModel
+import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -34,6 +36,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(GameActivityViewModel::class)
     internal abstract fun bindGameActivityViewModel(gameActivityViewModel: GameActivityViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PokedexActivityViewModel::class)
+    internal abstract fun bindPokedexActivityViewModel(pokedexActivityViewModel: PokedexActivityViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PokedexViewModel::class)
+    internal abstract fun bindPokedexViewModel(gameActivityViewModel: PokedexViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: DaggerViewModelFactory): ViewModelProvider.Factory

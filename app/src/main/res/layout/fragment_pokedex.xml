@@ -8,14 +8,14 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.game.viewmodel.GameViewModel" />
+            type="com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel" />
 
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.activity.HomeActivity">
+        tools:context=".ui.game.activity.GameActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -33,18 +33,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_card" />
-
-        <ImageView
-            android:id="@+id/matched_card_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            tools:src="@tools:sample/backgrounds/scenic" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -66,6 +66,10 @@ class Repository
         executeInThread { pokemonDao.updateEncountered(id, isEncountered) }
     }
 
+    fun getCaughtPokemon() : LiveData<List<Pokemon>> {
+        return pokemonDao.getCaughtPokemon(true)
+    }
+
     fun getLiveGameState(): GameStateLiveData {
         return liveGameState
     }

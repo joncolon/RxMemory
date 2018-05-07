@@ -1,5 +1,6 @@
 package com.tronography.rxmemory.data.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.tronography.rxmemory.data.model.pokemon.Pokemon
 import io.reactivex.Single
@@ -9,7 +10,10 @@ import io.reactivex.Single
 abstract class PokemonDao {
 
     @Query("SELECT * FROM ${AppDatabase.POKEMON_TABLE}")
-    abstract fun getAllPokemon(): Single<List<Pokemon>>
+    abstract fun getAllPokemon(): LiveData<List<Pokemon>>
+
+    @Query("SELECT * FROM ${AppDatabase.POKEMON_TABLE} WHERE caught = :caught")
+    abstract fun getCaughtPokemon(caught: Boolean): LiveData<List<Pokemon>>
 
     @Query("SELECT COUNT(*) FROM ${AppDatabase.POKEMON_TABLE}")
     abstract fun getPokemonCount(): Single<Int>

@@ -89,7 +89,7 @@ class GameViewModel
                 disposables.add(flipFirstCard(card))
             }
             false -> {
-                DEBUG("second card selected = ${card.description}")
+                DEBUG("second item_card selected = ${card.description}")
                 incrementAttemptCount()
                 broadcastGameState(RESETTING_CARDS)
                 disposables.add(
@@ -141,7 +141,7 @@ class GameViewModel
 
     private fun flipFirstCard(card: Card): DisposableObserver<Card> {
         return Observable.just(card)
-                .doOnSubscribe { DEBUG("Flipping first card : ${card.description}") }
+                .doOnSubscribe { DEBUG("Flipping first item_card : ${card.description}") }
                 .subscribeOn(Schedulers.io())
                 .compose(selectFirstCard())
                 .compose(addToFlippedCardMap())
@@ -155,7 +155,7 @@ class GameViewModel
                     }
 
                     override fun onError(e: Throwable) {
-                        ERROR("Unable to flip first card. ${e.message}")
+                        ERROR("Unable to flip first item_card. ${e.message}")
                     }
                 })
     }

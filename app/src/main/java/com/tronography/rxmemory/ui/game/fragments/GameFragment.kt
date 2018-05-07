@@ -16,8 +16,8 @@ import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
-import com.tronography.rxmemory.ui.game.adapter.GameAdapter
-import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
+import com.tronography.rxmemory.ui.game.recyclerview.GameAdapter
+import com.tronography.rxmemory.ui.game.recyclerview.GameItemAnimator
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
 import com.tronography.rxmemory.ui.navigation.fragmentNavigator

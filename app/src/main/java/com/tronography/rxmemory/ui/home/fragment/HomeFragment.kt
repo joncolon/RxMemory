@@ -17,6 +17,7 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentHomeBinding
 import com.tronography.rxmemory.ui.game.activity.GameActivity
 import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
+import com.tronography.rxmemory.ui.pokedex.activity.PokedexActivity
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import getResourceEntryName
@@ -68,11 +69,21 @@ class HomeFragment : Fragment() {
             val intent = Intent(this.context, GameActivity::class.java)
             startActivity(intent)
         })
+
+        viewModel.navigateToPokedexActivity.observe(this, Observer { viewId ->
+            DEBUG("$viewId clicked")
+            val intent = Intent(this.context, PokedexActivity::class.java)
+            startActivity(intent)
+        })
     }
 
     private fun setUpClickListeners() {
         viewDataBinding.playButton.setOnClickListener {
             viewModel.onPlayButtonClicked(it.getResourceEntryName())
+        }
+
+        viewDataBinding.pokedexButton.setOnClickListener {
+            viewModel.onPokedexButtonClicked(it.getResourceEntryName())
         }
     }
 

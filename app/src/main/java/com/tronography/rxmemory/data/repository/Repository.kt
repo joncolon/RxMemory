@@ -4,7 +4,6 @@ package com.tronography.rxmemory.data.repository
 import DEBUG
 import ERROR
 import android.arch.lifecycle.LiveData
-import com.tronography.rxmemory.data.http.PokeClient
 import com.tronography.rxmemory.data.local.CardDao
 import com.tronography.rxmemory.data.local.MutableCard
 import com.tronography.rxmemory.data.local.MutablePokemon
@@ -13,11 +12,17 @@ import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.model.common.NamedApiResource
 import com.tronography.rxmemory.data.model.common.NamedApiResourceList
 import com.tronography.rxmemory.data.model.pokemon.Pokemon
+import com.tronography.rxmemory.data.remote.PokeClient
+import com.tronography.rxmemory.data.state.GameState
+import com.tronography.rxmemory.data.state.GameStateLiveData
+import com.tronography.rxmemory.data.state.NetworkState
+import com.tronography.rxmemory.data.state.NetworkStateLiveData
 import com.tronography.rxmemory.utilities.GlideUtils
 import com.tronography.rxmemory.utilities.NetworkConnectivityHelper
 import executeInThread
 import io.reactivex.Observable
 import io.reactivex.Observable.fromCallable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -25,10 +30,11 @@ import javax.inject.Singleton
 
 @Singleton
 class Repository
-@Inject
-constructor(
+@Inject constructor(
 
-        private val networkConnectivity: NetworkConnectivityHelper,
+        private val liveGameState : GameStateLiveData,
+
+        private val liveNetworkState : NetworkStateLiveData,
 
         private val cardDao: CardDao,
 
@@ -44,28 +50,51 @@ constructor(
         executeInThread { cardDao.insert(card.toMutable()) }
     }
 
+    fun deleteCardTable() {
+        executeInThread { cardDao.deleteTable() }
+    }
+
     fun getCards(): LiveData<List<Card>> {
         return cardDao.getAllCards()
     }
 
+    fun updatePokemonAsCaught(id : Int, isCaught: Boolean){
+        executeInThread { pokemonDao.updateCaught(id, isCaught) }
+    }
+
+    fun updatePokemonAsEncountered(id : Int, isEncountered: Boolean){
+        executeInThread { pokemonDao.updateEncountered(id, isEncountered) }
+    }
+
+    fun getLiveGameState(): GameStateLiveData {
+        return liveGameState
+    }
+
     fun createNewPokemonDeck() {
+        liveGameState.setGameStateLiveData(GameState.LOADING)
         getAllPokemonFromDB()
                 .subscribeOn(Schedulers.io())
                 .concatMap { pokemonCount ->
-                    if ( pokemonCount < FULL_DATABASE) {
+                    if (pokemonCount < FULL_DATABASE) {
                         return@concatMap getPokemonFromApi(ONE_FIFTY_ONE, NO_OFFSET)
                     } else
                         return@concatMap getEightPokemonFromDB()
                 }
-                .concatMap { Observable.just(updateCardDatabase(it)) }
+                .concatMap {
+                    fromCallable { preloadImages(it) }.observeOn(AndroidSchedulers.mainThread())
+                    Observable.just(updateCardDatabase(it))
+                }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Unit>() {
                     override fun onComplete() {
+                        liveGameState.setGameStateLiveData(GameState.LOAD_COMPLETE)
                     }
 
                     override fun onNext(t: Unit) {
                     }
 
                     override fun onError(e: Throwable) {
+                        liveGameState.setGameStateLiveData(GameState.ERROR)
                         ERROR("Unable to create a new deck : \n${e.cause} \n${e.message}")
                     }
                 })
@@ -86,12 +115,17 @@ constructor(
                     client.getPokemon(namedApiResource.name)
                             .subscribeOn(Schedulers.io())
                 }, MAX_CONCURRENCY)
-                .doOnNext { DEBUG("Received on ${it.name} ${it.id} on ${Thread.currentThread().getName()}") }
+                .doOnNext {
+                    DEBUG("Received on ${it.name} ${it.id} on ${Thread.currentThread().getName()}")
+                }
                 .map { it.toMutable() }
                 .toList()
                 .toObservable()
-                .concatMap { pokemon: List<MutablePokemon> -> fromCallable { updatePokemonDatabase(pokemon) } }
+                .concatMap { pokemon: List<MutablePokemon> ->
+                    fromCallable { updatePokemonDatabase(pokemon) }
+                }
                 .switchMap { getEightPokemonFromDB() }
+                .retry(5)
     }
 
     private fun getEightPokemonFromDB(): Observable<List<Pokemon>> {
@@ -104,6 +138,10 @@ constructor(
         return pokemonDao.getPokemonCount()
                 .toObservable()
                 .doOnNext { DEBUG("Pokemon DB Count = $it ") }
+    }
+
+    private fun preloadImages(cards: List<Pokemon>) {
+        cards.forEach { card -> card.sprites.frontDefault?.let { glideUtils.preloadImages(it) } }
     }
 
     private fun updateCardDatabase(pokemon: List<Pokemon>) {
@@ -132,6 +170,6 @@ constructor(
         private const val ONE_FIFTY_ONE = 151
         private const val NO_OFFSET = 0
         private const val FULL_DATABASE = 151
-        private const val MAX_CONCURRENCY = 100
+        private const val MAX_CONCURRENCY = 75
     }
 }

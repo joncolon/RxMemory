@@ -8,27 +8,23 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
-import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
-import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.game.adapter.GameAdapter
 import com.tronography.rxmemory.ui.game.adapter.GameItemAnimator
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
+import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
-import com.tronography.rxmemory.utilities.DiffCallback
 import dagger.android.support.AndroidSupportInjection
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class GameFragment : Fragment() {
 
     @Inject
@@ -38,8 +34,6 @@ class GameFragment : Fragment() {
     private val layoutId = R.layout.fragment_game
 
     private val bindingVariable = BR.viewModel
-
-    private val disposables = CompositeDisposable()
 
     private lateinit var viewDataBinding: FragmentGameBinding
 
@@ -55,13 +49,12 @@ class GameFragment : Fragment() {
     override fun onAttach(context: Context?) {
         performDependencyInjection()
         super.onAttach(context)
+        DEBUG("ATTACHED")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        try {
-            viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
-        } catch (error : Exception) {kotlin.error("Activity can not be null")}
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView
@@ -71,18 +64,12 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
-        setUpRecyclerView()
+        initAdapter()
         observeLiveData()
     }
 
     private fun performDependencyInjection() {
         AndroidSupportInjection.inject(this)
-    }
-
-    private fun clearDisposables() {
-        DEBUG("Clearing Disposables")
-        disposables.dispose()
-        DEBUG("Disposables cleared : ${disposables.isDisposed}")
     }
 
     private fun observeLiveData() {
@@ -93,10 +80,11 @@ class GameFragment : Fragment() {
     private fun observeLiveDeck() {
         viewModel.observeDeck().observe(this, Observer { cards ->
             DEBUG("${cards?.size} received ")
+            DEBUG("${cards} received ")
 
             cards?.let {
                 when (cards.size == FULL_DECK_SIZE) {
-                    true -> updateList(cards)
+                    true -> adapter.updateList(cards)
                 }
             }
         })
@@ -108,62 +96,60 @@ class GameFragment : Fragment() {
                     DEBUG("GAME STATE : ${gameState}")
                     when (gameState) {
 
-                        GAME_OVER -> {
-                            adapter.disableCardClicks()
-                            onDestroy()
+                        LOADING -> {
+                            //todo: show loading status
                         }
 
-                        IN_PROGRESS -> {
-                            adapter.enableCardClick()
+                        LOAD_COMPLETE -> {
+                            setUpRecyclerView()
                         }
 
-                        NOT_IN_PROGRESS -> adapter.disableCardClicks()
-
-                        LOADING -> adapter.disableCardClicks()
+                        IN_PROGRESS -> adapter.enableCardClick()
 
                         RESETTING_CARDS -> adapter.disableCardClicks()
 
-                        else -> {
-                            //do nothing
+                        GAME_OVER -> {
+                            adapter.disableCardClicks()
+                            showGameOverFragment()
                         }
+
                     }
                 })
     }
 
+    private fun showGameOverFragment() {
+        activity?.let { fragmentNavigator.showGameOverFragment(it) }
+    }
+
     private fun setUpRecyclerView() {
         activity?.let {
-            adapter = GameAdapter(viewModel)
-            spanningGridLayoutManager = SpanningGridLayoutManager(it, 4)
-            viewDataBinding.recyclerView.layoutManager = spanningGridLayoutManager
-            viewDataBinding.recyclerView.adapter = adapter
-            viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
+            DEBUG("Setting up RecyclerView...")
+            val recyclerView = viewDataBinding.recyclerView
+
+            spanningGridLayoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
+            recyclerView.layoutManager = spanningGridLayoutManager
+            recyclerView.setHasFixedSize(true)
+            recyclerView.itemAnimator = GameItemAnimator()
+            recyclerView.itemAnimator.addDuration = 0
+            recyclerView.adapter = adapter
+            recyclerView.getItemAnimator().addDuration = 0
+            recyclerView.getItemAnimator().removeDuration = 0
+
         }
     }
 
-    private fun updateList(cards: List<Card>) {
-        val oldCards = adapter.cards
-        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(cards, oldCards))
-        adapter.clearItems()
-        adapter.addItems(cards)
-        result.dispatchUpdatesTo(adapter)
+    private fun initAdapter() {
+        adapter = GameAdapter(viewModel)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        clearDisposables()
+    override fun onDetach() {
+        super.onDetach()
+        DEBUG("DETACHED")
     }
 
     companion object {
-
         private const val FULL_DECK_SIZE = 16
-
         const val TAG = "GameFragment"
-
-        fun newInstance(): GameFragment {
-            return GameFragment()
-        }
-
     }
-
 
 }

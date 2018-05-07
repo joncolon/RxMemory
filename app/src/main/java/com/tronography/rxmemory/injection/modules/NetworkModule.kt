@@ -1,7 +1,6 @@
 package com.tronography.rxmemory.injection.modules
 
-import com.tronography.rxmemory.data.http.HttpConstants
-import com.tronography.rxmemory.data.http.PokeClient
+import com.tronography.rxmemory.data.remote.PokeClient
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

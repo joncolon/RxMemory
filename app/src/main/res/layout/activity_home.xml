@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.game.viewmodel.GameActivityViewModel" />
+            type="com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel" />
 
     </data>
 

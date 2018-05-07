@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.data.species
+package com.tronography.rxmemory.data.model.species
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

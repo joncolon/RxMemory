@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.activity
+package com.tronography.rxmemory.ui.home.activity
 
 import ERROR
 import android.arch.lifecycle.ViewModelProviders
@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.databinding.ActivityGameBinding
+import com.tronography.rxmemory.databinding.ActivityHomeBinding
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.game.viewmodel.GameActivityViewModel
+import com.tronography.rxmemory.ui.home.fragment.HomeFragment
+import com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel
 import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.AndroidInjector
@@ -16,7 +17,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class GameActivity : BaseActivity<ActivityGameBinding, GameActivityViewModel>(), HasSupportFragmentInjector {
+class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(), HasSupportFragmentInjector {
 
     @Inject
     lateinit var viewModelFactory: DaggerViewModelFactory
@@ -28,15 +29,15 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameActivityViewModel>(),
         get() = BR.viewModel
 
     override val layoutId: Int
-        get() = R.layout.activity_game
+        get() = R.layout.activity_home
 
-    override val viewModel: GameActivityViewModel
-        get() = ViewModelProviders.of(this, viewModelFactory).get(GameActivityViewModel::class.java)
+    override val viewModel: HomeActivityViewModel
+        get() = ViewModelProviders.of(this, viewModelFactory).get(HomeActivityViewModel::class.java)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fragmentNavigator.showGameFragment(this)
+        fragmentNavigator.showHomeFragment(this)
     }
 
     private fun enableBlueIndicator() {
@@ -54,6 +55,14 @@ class GameActivity : BaseActivity<ActivityGameBinding, GameActivityViewModel>(),
     override fun onDestroy() {
         super.onDestroy()
         ERROR("ON DESTROY CALLED")
+    }
+
+    override fun onBackPressed() {
+        val homeFragment = supportFragmentManager.findFragmentByTag(HomeFragment.TAG)
+        when (homeFragment) {
+            null -> fragmentNavigator.showHomeFragment(this)
+            else -> super.onBackPressed()
+        }
     }
 
 }

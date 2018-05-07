@@ -13,6 +13,7 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/pokedex_fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.game.activity.GameActivity">

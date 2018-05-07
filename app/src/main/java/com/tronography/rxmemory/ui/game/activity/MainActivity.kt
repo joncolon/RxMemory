@@ -7,8 +7,7 @@ import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.ActivityMainBinding
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
-import com.tronography.rxmemory.ui.game.viewmodel.HomeViewModel
+import com.tronography.rxmemory.ui.game.fragments.HomeFragment
 import com.tronography.rxmemory.ui.game.viewmodel.MainViewModel
 import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
@@ -55,6 +54,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), HasSupp
     override fun onDestroy() {
         super.onDestroy()
         ERROR("ON DESTROY CALLED")
+    }
+
+    override fun onBackPressed() {
+        val homeFragment = supportFragmentManager.findFragmentByTag(HomeFragment.TAG)
+        when (homeFragment) {
+            null -> fragmentNavigator.showHomeFragment(this)
+            else -> super.onBackPressed()
+        }
     }
 
 }

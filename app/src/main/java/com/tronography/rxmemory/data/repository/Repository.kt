@@ -58,11 +58,11 @@ class Repository
         return cardDao.getAllCards()
     }
 
-    fun updatePokemonAsCaught(id : String, isCaught: Boolean){
+    fun updatePokemonAsCaught(id : Int, isCaught: Boolean){
         executeInThread { pokemonDao.updateCaught(id, isCaught) }
     }
 
-    fun updatePokemonAsEncountered(id : String, isEncountered: Boolean){
+    fun updatePokemonAsEncountered(id : Int, isEncountered: Boolean){
         executeInThread { pokemonDao.updateEncountered(id, isEncountered) }
     }
 
@@ -87,10 +87,10 @@ class Repository
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : DisposableObserver<Unit>() {
                     override fun onComplete() {
+                        liveGameState.setGameStateLiveData(GameState.LOAD_COMPLETE)
                     }
 
                     override fun onNext(t: Unit) {
-                        liveGameState.setGameStateLiveData(GameState.LOAD_COMPLETE)
                     }
 
                     override fun onError(e: Throwable) {
@@ -170,6 +170,6 @@ class Repository
         private const val ONE_FIFTY_ONE = 151
         private const val NO_OFFSET = 0
         private const val FULL_DATABASE = 151
-        private const val MAX_CONCURRENCY = 100
+        private const val MAX_CONCURRENCY = 75
     }
 }

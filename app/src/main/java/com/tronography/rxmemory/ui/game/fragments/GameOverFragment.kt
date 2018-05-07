@@ -77,9 +77,6 @@ class GameOverFragment : Fragment() {
 
     companion object {
         const val TAG = "GameOverFragment"
-        fun newInstance(): GameOverFragment {
-            return GameOverFragment()
-        }
     }
 
 }

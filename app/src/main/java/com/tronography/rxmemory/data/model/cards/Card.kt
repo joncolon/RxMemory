@@ -17,7 +17,7 @@ data class Card(
 
         val description: String,
 
-        val cardId: String = UUID.randomUUID().toString(),
+        val cardId: Long = UUID.randomUUID().leastSignificantBits,
 
         val isFlipped: Boolean = false,
 
@@ -34,5 +34,6 @@ data class Card(
     fun selectCard() = Card(pokemonId, photoUrl, description, cardId, isFlipped = true, isSelected = true)
 
     fun resetCard() = Card(pokemonId, photoUrl, description, cardId, isFlipped = false, isSelected = false)
+
 }
 

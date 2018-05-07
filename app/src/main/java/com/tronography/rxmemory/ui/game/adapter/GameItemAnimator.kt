@@ -20,10 +20,9 @@ import java.util.*
 class GameItemAnimator : DefaultItemAnimator() {
 
     private var cardFlipAnimationMap: MutableMap<RecyclerView.ViewHolder, AnimatorSet> = HashMap()
-    private var animationTwoMap: MutableMap<RecyclerView.ViewHolder, ObjectAnimator> = HashMap()
+    private var spinEntryAnimationMap: MutableMap<RecyclerView.ViewHolder, ObjectAnimator> = HashMap()
 
-
-    private var lastAddAnimatedItem = -2
+    private var lastAddAnimatedItem = -1
 
     override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
         return true
@@ -155,7 +154,7 @@ class GameItemAnimator : DefaultItemAnimator() {
         bounceAnimY.addListener(object : AnimatorListenerAdapter() {
 
             override fun onAnimationEnd(animation: Animator) {
-                animationTwoMap.remove(holder)
+                spinEntryAnimationMap.remove(holder)
                 dispatchChangeFinishedIfAllAnimationsEnded(holder)
             }
         })
@@ -165,6 +164,16 @@ class GameItemAnimator : DefaultItemAnimator() {
 
         cardFlipAnimationMap.put(holder, animatorSet)
     }
+
+    override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
+        if (viewHolder.layoutPosition > lastAddAnimatedItem) {
+            lastAddAnimatedItem++
+            runEnterAnimation(viewHolder as GameAdapter.CardViewHolder)
+            return false
+        }
+        return false
+    }
+
 
     private fun runEnterAnimation(holder: GameAdapter.CardViewHolder) {
         val screenHeight = ViewUtils.getScreenHeight(holder.itemView.context)
@@ -206,13 +215,13 @@ class GameItemAnimator : DefaultItemAnimator() {
         if (cardFlipAnimationMap.containsKey(item)) {
             cardFlipAnimationMap[item]?.cancel()
         }
-        if (animationTwoMap.containsKey(item)) {
-            animationTwoMap[item]?.cancel()
+        if (spinEntryAnimationMap.containsKey(item)) {
+            spinEntryAnimationMap[item]?.cancel()
         }
     }
 
     private fun dispatchChangeFinishedIfAllAnimationsEnded(holder: GameAdapter.CardViewHolder) {
-        if (cardFlipAnimationMap.containsKey(holder) || animationTwoMap.containsKey(holder)) {
+        if (cardFlipAnimationMap.containsKey(holder) || spinEntryAnimationMap.containsKey(holder)) {
             return
         }
 

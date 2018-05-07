@@ -15,8 +15,8 @@ class MutableCard(
 
         var description: String,
 
-        @PrimaryKey
-        var cardId: String = UUID.randomUUID().toString(),
+        @PrimaryKey()
+        var cardId: Long,
 
         var isFlipped: Boolean,
 

@@ -8,14 +8,12 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
-import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
 import com.tronography.rxmemory.ui.game.adapter.GameAdapter
@@ -24,7 +22,6 @@ import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
 import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
-import com.tronography.rxmemory.utilities.DiffCallback
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -68,6 +65,7 @@ class GameFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         initAdapter()
+        setUpRecyclerView()
         observeLiveData()
     }
 
@@ -83,10 +81,11 @@ class GameFragment : Fragment() {
     private fun observeLiveDeck() {
         viewModel.observeDeck().observe(this, Observer { cards ->
             DEBUG("${cards?.size} received ")
+            DEBUG("${cards} received ")
 
             cards?.let {
                 when (cards.size == FULL_DECK_SIZE) {
-                    true -> updateList(cards)
+                    true -> adapter.updateList(cards)
                 }
             }
         })
@@ -103,7 +102,6 @@ class GameFragment : Fragment() {
                         }
 
                         LOAD_COMPLETE -> {
-                            setUpRecyclerView()
                         }
 
                         IN_PROGRESS -> adapter.enableCardClick()
@@ -128,6 +126,7 @@ class GameFragment : Fragment() {
             DEBUG("Setting up RecyclerView...")
             spanningGridLayoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
             viewDataBinding.recyclerView.layoutManager = spanningGridLayoutManager
+            viewDataBinding.recyclerView.setHasFixedSize(true)
             viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
             viewDataBinding.recyclerView.itemAnimator.addDuration = 0
             viewDataBinding.recyclerView.adapter = adapter
@@ -136,15 +135,7 @@ class GameFragment : Fragment() {
 
     private fun initAdapter() {
         adapter = GameAdapter(viewModel)
-    }
-
-    private fun updateList(cards: List<Card>) {
-        DEBUG("ADAPTER UPDATED...")
-        val oldCards = adapter.cards
-        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(cards, oldCards), false)
-        adapter.clearItems()
-        adapter.addItems(cards)
-        result.dispatchUpdatesTo(adapter)
+        adapter.setHasStableIds(true)
     }
 
     override fun onDetach() {

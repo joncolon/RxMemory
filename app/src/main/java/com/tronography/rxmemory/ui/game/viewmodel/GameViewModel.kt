@@ -48,6 +48,8 @@ class GameViewModel
 
     fun refreshCards() {
         DEBUG("refreshCards called")
+        gameStateDataMerger.addSource(repository.getLiveGameState(), { state -> gameStateDataMerger.value = state })
+        gameStateDataMerger.addSource(gameState, { state -> gameStateDataMerger.value = state })
         repository.createNewPokemonDeck()
     }
 
@@ -179,6 +181,7 @@ class GameViewModel
 
     private fun updateMatchedCards(matchedCard: Card) {
         matchedCards.put(matchedCard.cardId.toString(), matchedCard)
+        repository.updatePokemonAsCaught(matchedCard.pokemonId, true)
         repository.insertCard(matchedCard)
     }
 
@@ -234,6 +237,7 @@ class GameViewModel
                 Observable.fromCallable {
                     ERROR("isGameOver = $isGameOver")
                     if (isGameOver) {
+                        repository.deleteCardTable()
                         broadcastGameState(GAME_OVER)
                     } else {
                         broadcastGameState(IN_PROGRESS)
@@ -261,12 +265,6 @@ class GameViewModel
         gameState.value = state
     }
 
-    private fun delayedAction(function: () -> Unit, delay: Long) {
-        disposables.add(
-                Completable.timer(delay, TimeUnit.MILLISECONDS)
-                        .subscribe { function() })
-    }
-
     companion object {
         private const val ONE_SECOND: Long = 1000
         private const val DECK_SIZE = 16
@@ -276,6 +274,7 @@ class GameViewModel
     override fun onCleared() {
         super.onCleared()
         clearDisposables()
+        repository.deleteCardTable()
         DEBUG("GameViewModel : CLEARED")
     }
 

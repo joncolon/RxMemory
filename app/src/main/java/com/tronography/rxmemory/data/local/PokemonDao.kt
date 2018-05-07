@@ -18,16 +18,16 @@ abstract class PokemonDao {
     abstract fun getEightRandomPokemon(): Single<List<Pokemon>>
 
     @Query("SELECT * FROM ${AppDatabase.POKEMON_TABLE} WHERE id = :id")
-    abstract fun getPokemonById(id: String): Single<Pokemon>
+    abstract fun getPokemonById(id: Int): Single<Pokemon>
 
     @Query("DELETE FROM ${AppDatabase.POKEMON_TABLE}")
     abstract fun deleteTable()
 
     @Query("UPDATE ${AppDatabase.POKEMON_TABLE} SET encountered = :encountered  WHERE id = :id")
-    abstract fun updateEncountered(id: String, encountered: Boolean)
+    abstract fun updateEncountered(id: Int, encountered: Boolean)
 
     @Query("UPDATE ${AppDatabase.POKEMON_TABLE} SET caught = :caught  WHERE id = :id")
-    abstract fun updateCaught(id: String, caught: Boolean)
+    abstract fun updateCaught(id: Int, caught: Boolean)
 
     @Delete
     abstract fun delete(pokemon: MutablePokemon)

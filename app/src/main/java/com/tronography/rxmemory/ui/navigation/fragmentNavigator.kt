@@ -1,6 +1,5 @@
 package com.tronography.rxmemory.ui.navigation
 
-import android.app.Activity
 import android.support.v4.app.FragmentActivity
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.ui.game.fragments.GameFragment
@@ -10,7 +9,7 @@ import showFragment
 
 object fragmentNavigator {
 
-    fun showGameOverFragment(activity : FragmentActivity) {
+    fun showGameOverFragment(activity: FragmentActivity) {
         activity.showFragment(
                 GameOverFragment(),
                 R.id.fragment_container,
@@ -24,11 +23,11 @@ object fragmentNavigator {
                 GameFragment(),
                 R.id.fragment_container,
                 GameFragment.TAG,
-                true
+                false
         )
     }
 
-    fun showHomeFragment(activity : FragmentActivity) {
+    fun showHomeFragment(activity: FragmentActivity) {
         activity.showFragment(
                 HomeFragment(),
                 R.id.fragment_container,

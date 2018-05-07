@@ -14,4 +14,5 @@ data class TypesItem(
 
         @field:SerializedName("type")
         val type: Type
+
 ) : Parcelable

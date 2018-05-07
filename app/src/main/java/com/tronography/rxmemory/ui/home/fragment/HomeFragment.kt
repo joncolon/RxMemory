@@ -1,9 +1,10 @@
-package com.tronography.rxmemory.ui.game.fragments
+package com.tronography.rxmemory.ui.home.fragment
 
 import DEBUG
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.LayoutRes
@@ -14,12 +15,11 @@ import android.view.ViewGroup
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentHomeBinding
-import com.tronography.rxmemory.ui.game.viewmodel.HomeViewModel
-import com.tronography.rxmemory.ui.navigation.fragmentNavigator
+import com.tronography.rxmemory.ui.game.activity.GameActivity
+import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import getResourceEntryName
-import showFragment
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
@@ -63,9 +63,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeNavigationEvents() {
-        viewModel.navigateToGameFragment.observe(this, Observer { viewId ->
+        viewModel.navigateToGameActivity.observe(this, Observer { viewId ->
             DEBUG("$viewId clicked")
-            activity?.let { fragmentNavigator.showGameFragment(it) }
+            val intent = Intent(this.context, GameActivity::class.java)
+            startActivity(intent)
         })
     }
 

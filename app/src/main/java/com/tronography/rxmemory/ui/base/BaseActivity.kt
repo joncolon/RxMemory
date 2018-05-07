@@ -6,6 +6,7 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.FragmentActivity
+import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import dagger.android.AndroidInjection
 
 

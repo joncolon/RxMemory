@@ -11,8 +11,8 @@ import android.widget.ImageView
 import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.databinding.CardBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
-import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.ui.game.listeners.OnCardClickedListener
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.utilities.DiffCallback
 import getResourceEntryName
 import java.util.*
@@ -52,22 +52,10 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
         return CardViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int, payloads: MutableList<Any>) {
-        super.onBindViewHolder(holder, position, payloads)
-        holder.adapterPosition
-        holder.itemView.setOnClickListener({
-            DEBUG("view clicked : ${it.getResourceEntryName()}")
-            val adapterPosition = holder.adapterPosition
-            when {adapterPosition != RecyclerView.NO_POSITION -> onCardClicked(cards[adapterPosition])
-            }
-        })
-        holder.onBind(position)
-
-    }
-
     fun updateList(newCards: List<Card>) {
-        DEBUG("ADAPTER UPDATED...")
-        val result: DiffUtil.DiffResult = DiffUtil.calculateDiff(DiffCallback(newCards, cards), true)
+        val result: DiffUtil.DiffResult =
+                DiffUtil.calculateDiff(DiffCallback(newCards, cards), true)
+
         cards.clear()
         cards.addAll(newCards)
         result.dispatchUpdatesTo(this)
@@ -85,29 +73,18 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
         holder.onBind(position)
     }
 
-    override fun getItemId(position: Int): Long {
-        return cards[position].cardId
-    }
-
     override fun getItemCount(): Int = cards.size
 
-    fun addItems(newMatches: List<Card>) {
-        cards.addAll(newMatches)
-    }
 
-    fun clearItems() {
-        cards.clear()
-    }
-
-    inner class CardViewHolder(private val binding: CardBinding) :
-            BaseViewHolder(binding.root) {
+    inner class CardViewHolder(private val binding: CardBinding) : BaseViewHolder(binding.root) {
 
         lateinit var card: Card
-        var cardFront: CardView = binding.cardFront
-        var card_front_image: ImageView = binding.cardFrontImage
-        var card_back_image: ImageView = binding.cardBackImage
-        var background: ConstraintLayout = binding.cardFrontContainer
-        var cardLayout: ConstraintLayout = binding.cardLayout
+
+        val cardFront: CardView = binding.cardFront
+        val card_front_image: ImageView = binding.cardFrontImage
+        val card_back_image: ImageView = binding.cardBackImage
+        val background: ConstraintLayout = binding.cardFrontContainer
+        val cardLayout: ConstraintLayout = binding.cardLayout
 
         override fun onBind(position: Int) {
             card = cards[position]

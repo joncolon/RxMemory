@@ -1,10 +1,8 @@
 package com.tronography.rxmemory.injection.activitybuilder
 
-import com.tronography.rxmemory.ui.game.activity.MainActivity
-import com.tronography.rxmemory.ui.game.modules.GameActivityModule
-import com.tronography.rxmemory.ui.game.modules.GameFragmentProvider
-import com.tronography.rxmemory.ui.game.modules.GameOverFragmentProvider
-import com.tronography.rxmemory.ui.game.modules.HomeFragmentProvider
+import com.tronography.rxmemory.ui.game.activity.GameActivity
+import com.tronography.rxmemory.ui.home.activity.HomeActivity
+import com.tronography.rxmemory.ui.game.modules.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -15,9 +13,13 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = arrayOf(
             GameActivityModule::class,
             GameFragmentProvider::class,
-            GameOverFragmentProvider::class,
+            GameOverFragmentProvider::class))
+    internal abstract fun bindGameActivity(): GameActivity
+
+    @ContributesAndroidInjector(modules = arrayOf(
+            MainActivityModule::class,
             HomeFragmentProvider::class
     ))
-    internal abstract fun bindGameActivity(): MainActivity
+    internal abstract fun bindMainActivity(): HomeActivity
 
 }

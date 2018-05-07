@@ -10,7 +10,7 @@ import io.reactivex.Single
 @Dao
 abstract class CardDao {
 
-    @Query("SELECT * FROM ${AppDatabase.CARD_TABLE} ORDER BY cardId")
+    @Query("SELECT * FROM ${AppDatabase.CARD_TABLE} ORDER BY id")
     abstract fun getAllCards(): LiveData<List<Card>>
 
     @Query("SELECT * FROM ${AppDatabase.CARD_TABLE} WHERE cardId = :cardId")

@@ -31,9 +31,11 @@ class GameViewModel
     private val matchedCards = HashMap<String, Card>()
 
     private var attemptCount = ZERO
+    private var liveAttemptCount = MutableLiveData<Int>()
+
     private var firstCardSelected: Card? = null
 
-    var gameStateDataMerger: MediatorLiveData<GameState> = MediatorLiveData()
+    val gameStateDataMerger: MediatorLiveData<GameState> = MediatorLiveData()
 
     private var gameState = MutableLiveData<GameState>()
 
@@ -53,8 +55,8 @@ class GameViewModel
         repository.createNewPokemonDeck()
     }
 
-    fun getAttemptCount(): Int {
-        return attemptCount
+    fun getAttemptCount(): LiveData<Int> {
+        return liveAttemptCount
     }
 
     fun getGameState(): LiveData<GameState> {
@@ -62,10 +64,17 @@ class GameViewModel
     }
 
     fun startGame() {
+        broadcastGameState(LOADING)
+        clearMediatorSources()
         flippedCards.clear()
         matchedCards.clear()
         attemptCount = ZERO
         refreshCards()
+    }
+
+    private fun clearMediatorSources() {
+        gameStateDataMerger.removeSource(repository.getLiveGameState())
+        gameStateDataMerger.removeSource(gameState)
     }
 
     fun onCardClicked(card: Card) {
@@ -258,6 +267,7 @@ class GameViewModel
 
     private fun incrementAttemptCount(): Int {
         attemptCount++
+        liveAttemptCount.value = attemptCount
         return attemptCount
     }
 

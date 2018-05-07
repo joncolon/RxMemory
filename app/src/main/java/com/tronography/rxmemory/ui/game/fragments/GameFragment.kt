@@ -54,7 +54,7 @@ class GameFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView
@@ -65,7 +65,6 @@ class GameFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         initAdapter()
-        setUpRecyclerView()
         observeLiveData()
     }
 
@@ -102,6 +101,7 @@ class GameFragment : Fragment() {
                         }
 
                         LOAD_COMPLETE -> {
+                            setUpRecyclerView()
                         }
 
                         IN_PROGRESS -> adapter.enableCardClick()
@@ -124,18 +124,22 @@ class GameFragment : Fragment() {
     private fun setUpRecyclerView() {
         activity?.let {
             DEBUG("Setting up RecyclerView...")
+            val recyclerView = viewDataBinding.recyclerView
+
             spanningGridLayoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
-            viewDataBinding.recyclerView.layoutManager = spanningGridLayoutManager
-            viewDataBinding.recyclerView.setHasFixedSize(true)
-            viewDataBinding.recyclerView.itemAnimator = GameItemAnimator()
-            viewDataBinding.recyclerView.itemAnimator.addDuration = 0
-            viewDataBinding.recyclerView.adapter = adapter
+            recyclerView.layoutManager = spanningGridLayoutManager
+            recyclerView.setHasFixedSize(true)
+            recyclerView.itemAnimator = GameItemAnimator()
+            recyclerView.itemAnimator.addDuration = 0
+            recyclerView.adapter = adapter
+            recyclerView.getItemAnimator().addDuration = 0
+            recyclerView.getItemAnimator().removeDuration = 0
+
         }
     }
 
     private fun initAdapter() {
         adapter = GameAdapter(viewModel)
-        adapter.setHasStableIds(true)
     }
 
     override fun onDetach() {

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.game.viewmodel.MainViewModel" />
+            type="com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel" />
 
     </data>
 
@@ -19,7 +19,7 @@
         android:clipChildren="false"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
-        tools:context=".ui.game.activity.MainActivity">
+        tools:context=".ui.home.activity.HomeActivity">
 
         <ImageView
             android:id="@+id/blue_indicator"

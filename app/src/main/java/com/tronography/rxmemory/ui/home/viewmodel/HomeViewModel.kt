@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.viewmodel
+package com.tronography.rxmemory.ui.home.viewmodel
 
 import DEBUG
 import android.arch.lifecycle.ViewModel
@@ -9,24 +9,24 @@ import javax.inject.Inject
 
 class HomeViewModel
 @Inject constructor(
-        private val repository: Repository
-) : ViewModel() {
+        private val repository: Repository) : ViewModel() {
 
-    private val navigateToGameFragmentEvent = SingleLiveEvent<String>()
+    private val navigateToGameActivityEvent = SingleLiveEvent<String>()
     private val navigateToSettingsFragmentEvent = SingleLiveEvent<String>()
-    private val navigateToPokedexFragmentEvent = SingleLiveEvent<String>()
+    private val navigateToPokedexActivityEvent = SingleLiveEvent<String>()
 
-    val navigateToGameFragment : SingleLiveEvent<String>
-        get() = navigateToGameFragmentEvent
+    val navigateToGameActivity : SingleLiveEvent<String>
+        get() = navigateToGameActivityEvent
 
     val navigateToSettingsFragment : SingleLiveEvent<String>
         get() = navigateToSettingsFragmentEvent
 
-    val navigateToPokedexFragment : SingleLiveEvent<String>
-        get() = navigateToPokedexFragmentEvent
+    val navigateToPokedexActivity : SingleLiveEvent<String>
+        get() = navigateToPokedexActivityEvent
 
     init {
         DEBUG("Initializing HomeViewModel")
+        repository.deleteCardTable()
     }
 
     private fun onSettingsButtonClicked(viewId: String) {
@@ -34,11 +34,11 @@ class HomeViewModel
     }
 
     private fun onPokedexButtonClicked(viewId: String) {
-        navigateToPokedexFragmentEvent.value = viewId
+        navigateToPokedexActivityEvent.value = viewId
     }
 
     fun onPlayButtonClicked(viewId: String) {
-        navigateToGameFragmentEvent.value = viewId
+        navigateToGameActivityEvent.value = viewId
     }
 
     override fun onCleared() {

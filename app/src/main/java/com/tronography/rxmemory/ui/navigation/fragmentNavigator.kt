@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentActivity
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.ui.game.fragments.GameFragment
 import com.tronography.rxmemory.ui.game.fragments.GameOverFragment
-import com.tronography.rxmemory.ui.game.fragments.HomeFragment
+import com.tronography.rxmemory.ui.home.fragment.HomeFragment
 import showFragment
 
 object fragmentNavigator {

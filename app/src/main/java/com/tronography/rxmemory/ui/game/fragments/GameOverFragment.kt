@@ -1,8 +1,10 @@
 package com.tronography.rxmemory.ui.game.fragments
 
 import DEBUG
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.annotation.LayoutRes
@@ -14,9 +16,10 @@ import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentGameOverBinding
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
+import com.tronography.rxmemory.ui.home.activity.HomeActivity
+import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
-import showFragment
 import javax.inject.Inject
 
 class GameOverFragment : Fragment() {
@@ -44,8 +47,7 @@ class GameOverFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView
@@ -56,13 +58,24 @@ class GameOverFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         setUpClickListeners()
-        viewDataBinding.attemptCountValueTv.text = viewModel.getAttemptCount().toString()
+        viewModel.getAttemptCount().observe(this, Observer { count ->
+            count?.let { displayAttemptCount(it) }
+        })
+    }
+
+    private fun displayAttemptCount(attemptCount : Int) {
+        viewDataBinding.attemptCountValueTv.text = attemptCount.toString()
     }
 
     private fun setUpClickListeners() {
         viewDataBinding.yesButton.setOnClickListener {
             viewModel.startGame()
-            activity?.showFragment(GameFragment(), R.id.fragment_container, GameFragment.TAG, false)
+            fragmentNavigator.showGameFragment(activity!!)
+        }
+
+        viewDataBinding.noButton.setOnClickListener {
+            val intent = Intent(this.context, HomeActivity::class.java)
+            startActivity(intent)
         }
     }
 

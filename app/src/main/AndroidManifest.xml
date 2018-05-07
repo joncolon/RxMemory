@@ -14,16 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--Activities-->
         <activity
             android:name="com.tronography.rxmemory.ui.home.activity.HomeActivity">
 
             <intent-filter>
+
                 <action
                     android:name="android.intent.action.MAIN"
                     android:screenOrientation="portrait"
                     android:theme="@style/noAnimTheme"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
+
             </intent-filter>
 
         </activity>
@@ -31,6 +34,11 @@
         <activity
             android:name=".ui.game.activity.GameActivity"
             android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/noAnimTheme"/>
+
+        <activity
+            android:name=".ui.pokedex.activity.PokedexActivity"
             android:screenOrientation="portrait"
             android:theme="@style/noAnimTheme"/>
 

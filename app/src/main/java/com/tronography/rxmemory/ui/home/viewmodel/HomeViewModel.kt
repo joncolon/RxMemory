@@ -33,7 +33,7 @@ class HomeViewModel
         navigateToSettingsFragmentEvent.value = viewId
     }
 
-    private fun onPokedexButtonClicked(viewId: String) {
+    fun onPokedexButtonClicked(viewId: String) {
         navigateToPokedexActivityEvent.value = viewId
     }
 

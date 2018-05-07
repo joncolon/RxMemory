@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.adapter
+package com.tronography.rxmemory.ui.game.recyclerview
 
 import DEBUG
 import android.support.constraint.ConstraintLayout
@@ -9,11 +9,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.tronography.rxmemory.data.model.cards.Card
-import com.tronography.rxmemory.databinding.CardBinding
+import com.tronography.rxmemory.databinding.ItemCardBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
 import com.tronography.rxmemory.ui.game.listeners.OnCardClickedListener
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
-import com.tronography.rxmemory.utilities.DiffCallback
 import getResourceEntryName
 import java.util.*
 import javax.inject.Inject
@@ -46,7 +45,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        val binding = CardBinding
+        val binding = ItemCardBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
 
         return CardViewHolder(binding)
@@ -54,7 +53,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
 
     fun updateList(newCards: List<Card>) {
         val result: DiffUtil.DiffResult =
-                DiffUtil.calculateDiff(DiffCallback(newCards, cards), true)
+                DiffUtil.calculateDiff(CardDiffCallback(newCards, cards), true)
 
         cards.clear()
         cards.addAll(newCards)
@@ -76,7 +75,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
     override fun getItemCount(): Int = cards.size
 
 
-    inner class CardViewHolder(private val binding: CardBinding) : BaseViewHolder(binding.root) {
+    inner class CardViewHolder(private val binding: ItemCardBinding) : BaseViewHolder(binding.root) {
 
         lateinit var card: Card
 

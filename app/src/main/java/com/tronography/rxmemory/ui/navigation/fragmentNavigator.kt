@@ -5,6 +5,7 @@ import com.tronography.rxmemory.R
 import com.tronography.rxmemory.ui.game.fragments.GameFragment
 import com.tronography.rxmemory.ui.game.fragments.GameOverFragment
 import com.tronography.rxmemory.ui.home.fragment.HomeFragment
+import com.tronography.rxmemory.ui.pokedex.fragment.PokedexFragment
 import showFragment
 
 object fragmentNavigator {
@@ -32,6 +33,15 @@ object fragmentNavigator {
                 HomeFragment(),
                 R.id.fragment_container,
                 HomeFragment.TAG,
+                false
+        )
+    }
+
+    fun showPokedexFragment(activity: FragmentActivity) {
+        activity.showFragment(
+                PokedexFragment(),
+                R.id.fragment_container,
+                PokedexFragment.TAG,
                 false
         )
     }

@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.adapter
+package com.tronography.rxmemory.ui.game.recyclerview
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -44,14 +44,14 @@ class GameItemAnimator : DefaultItemAnimator() {
     private fun animateFlipRevealCardFront(holder: GameAdapter.CardViewHolder) {
         val animatorSet = AnimatorSet()
 
-        val startSpin = ObjectAnimator.ofFloat(holder.cardLayout, "rotationY", 0.0f, 90f)
+        val startSpin = ObjectAnimator.ofFloat(holder.cardLayout, ROTATION_Y, 0.0f, 90f)
         startSpin.duration = 300
         startSpin.interpolator = ACCELERATE_INTERPOLATOR
 
-        val rotateImageLeft = ObjectAnimator.ofFloat(holder.card_front_image, "rotationY", 90f, 180f)
-        rotateImageLeft.duration = 0
+        val rotateImageLeft = ObjectAnimator.ofFloat(holder.card_front_image, ROTATION_Y, 90f, 180f)
+        rotateImageLeft.duration = IMMEDIATE
 
-        val finishSpin = ObjectAnimator.ofFloat(holder.cardLayout, "rotationY", 90f, 180f)
+        val finishSpin = ObjectAnimator.ofFloat(holder.cardLayout, ROTATION_Y, 90f, 180f)
         finishSpin.duration = 300
         finishSpin.interpolator = DECCELERATE_INTERPOLATOR
 
@@ -95,12 +95,12 @@ class GameItemAnimator : DefaultItemAnimator() {
     private fun animateFlipRevealCardBack(holder: GameAdapter.CardViewHolder) {
         val animatorSet = AnimatorSet()
 
-        val startSpin = ObjectAnimator.ofFloat(holder.cardLayout, "rotationY", 180f, 90f)
-        startSpin.duration = 300
+        val startSpin = ObjectAnimator.ofFloat(holder.cardLayout, ROTATION_Y, 180f, 90f)
+        startSpin.duration = SPIN_DURATION
         startSpin.interpolator = ACCELERATE_INTERPOLATOR
 
-        val finishSpin = ObjectAnimator.ofFloat(holder.cardLayout, "rotationY", 90f, 0.0f)
-        finishSpin.duration = 300
+        val finishSpin = ObjectAnimator.ofFloat(holder.cardLayout, ROTATION_Y, 90f, 0.0f)
+        finishSpin.duration = SPIN_DURATION
         finishSpin.interpolator = DECCELERATE_INTERPOLATOR
 
         startSpin.addListener(object : AnimatorListenerAdapter() {
@@ -141,15 +141,15 @@ class GameItemAnimator : DefaultItemAnimator() {
         val animatorSet = AnimatorSet()
 
         val rotationAnim = ObjectAnimator.ofFloat(holder.cardFront, "rotation", 0f, 360f)
-        rotationAnim.duration = 300
+        rotationAnim.duration = ROTATION_DURATION
         rotationAnim.interpolator = ACCELERATE_INTERPOLATOR
 
         val bounceAnimX = ObjectAnimator.ofFloat(holder.cardFront, "scaleX", 0.2f, 1f)
-        bounceAnimX.duration = 450
+        bounceAnimX.duration = BOUNCE_DURATION
         bounceAnimX.interpolator = OVERSHOOT_INTERPOLATOR
 
         val bounceAnimY = ObjectAnimator.ofFloat(holder.cardFront, "scaleY", 0.2f, 1f)
-        bounceAnimY.duration = 450
+        bounceAnimY.duration = BOUNCE_DURATION
         bounceAnimY.interpolator = OVERSHOOT_INTERPOLATOR
         bounceAnimY.addListener(object : AnimatorListenerAdapter() {
 
@@ -181,7 +181,7 @@ class GameItemAnimator : DefaultItemAnimator() {
         holder.itemView.animate()
                 .translationY(0f)
                 .setInterpolator(DecelerateInterpolator(3f))
-                .setDuration(800)
+                .setDuration(ENTER_DURATION)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         dispatchAddFinished(holder)
@@ -237,6 +237,14 @@ class GameItemAnimator : DefaultItemAnimator() {
         private val DECCELERATE_INTERPOLATOR = DecelerateInterpolator()
         private val ACCELERATE_INTERPOLATOR = AccelerateInterpolator()
         private val OVERSHOOT_INTERPOLATOR = OvershootInterpolator(4f)
+
+        private val ROTATION_Y = "rotationY"
+
+        private val IMMEDIATE: Long = 0
+        private val SPIN_DURATION: Long = 300
+        private val ROTATION_DURATION: Long = 300
+        private val BOUNCE_DURATION: Long = 400
+        val ENTER_DURATION: Long = 800
     }
 
     class CardItemHolderInfo() : RecyclerView.ItemAnimator.ItemHolderInfo() {

@@ -67,7 +67,7 @@ class Repository
     }
 
     fun getCaughtPokemon() : LiveData<List<Pokemon>> {
-        return pokemonDao.getCaughtPokemon(true)
+        return pokemonDao.getAllPokemon()
     }
 
     fun getLiveGameState(): GameStateLiveData {

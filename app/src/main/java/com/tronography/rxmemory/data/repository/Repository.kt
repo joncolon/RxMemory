@@ -15,16 +15,15 @@ import com.tronography.rxmemory.data.model.pokemon.Pokemon
 import com.tronography.rxmemory.data.remote.PokeClient
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.data.state.GameStateLiveData
-import com.tronography.rxmemory.data.state.NetworkState
 import com.tronography.rxmemory.data.state.NetworkStateLiveData
 import com.tronography.rxmemory.utilities.GlideUtils
-import com.tronography.rxmemory.utilities.NetworkConnectivityHelper
 import executeInThread
 import io.reactivex.Observable
 import io.reactivex.Observable.fromCallable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,7 +79,7 @@ class Repository
                 .subscribeOn(Schedulers.io())
                 .concatMap { pokemonCount ->
                     if (pokemonCount < FULL_DATABASE) {
-                        return@concatMap getPokemonFromApi(ONE_FIFTY_ONE, NO_OFFSET)
+                        return@concatMap getPokemonFromApi(16, randomOffset())
                     } else
                         return@concatMap getEightPokemonFromDB()
                 }
@@ -102,6 +101,10 @@ class Repository
                         ERROR("Unable to create a new deck : \n${e.cause} \n${e.message}")
                     }
                 })
+    }
+
+    fun randomOffset() : Int {
+        return Random().nextInt(136)
     }
 
     fun getPokemonFromApi(limit: Int, offset: Int): Observable<List<Pokemon>> {
@@ -171,9 +174,7 @@ class Repository
     }
 
     companion object {
-        private const val ONE_FIFTY_ONE = 151
-        private const val NO_OFFSET = 0
         private const val FULL_DATABASE = 151
-        private const val MAX_CONCURRENCY = 75
+        private const val MAX_CONCURRENCY = 16
     }
 }

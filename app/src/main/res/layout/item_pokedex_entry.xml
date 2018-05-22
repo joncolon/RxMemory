@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="viewModel"
             type="com.tronography.rxmemory.data.model.pokemon.Pokemon"/>
@@ -23,9 +24,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
+            android:visibility="@{viewModel.caught ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintDimensionRatio="1:1"
             bind:imageUrl="@{viewModel.sprites.frontDefault}"
             tools:src="@tools:sample/avatars"/>
+
+        <ImageView
+            android:id="@+id/placeholder_iv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{viewModel.caught ? View.INVISIBLE : View.VISIBLE }"
+            android:layout_width="@dimen/match_constraints"
+            android:layout_height="@dimen/match_constraints"
+            android:padding="14dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintDimensionRatio="1:1"
+            android:src="@drawable/ic_pokeball_pixel"/>
 
         <TextView
             android:id="@+id/pokemon_id_tv"
@@ -56,7 +71,7 @@
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
-            android:text="@{viewModel.name}"
+            android:text="@{viewModel.caught ? viewModel.name : `???`}"
             tools:text="#Pikachu"
             android:fontFamily="@font/poke_gameboy"
             app:layout_constraintStart_toEndOf="@id/pokemon_id_tv"

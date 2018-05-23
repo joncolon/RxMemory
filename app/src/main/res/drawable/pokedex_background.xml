@@ -27,7 +27,7 @@
     </item>
 
 
-    <item android:left="16dp" android:top="56dp" android:bottom="56dp" android:right="16dp">
+    <item android:left="8dp" android:top="56dp" android:bottom="56dp" android:right="8dp">
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle" >
 

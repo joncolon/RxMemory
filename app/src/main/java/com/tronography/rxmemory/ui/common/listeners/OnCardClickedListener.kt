@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.listeners
+package com.tronography.rxmemory.ui.common.listeners
 
 import com.tronography.rxmemory.data.model.cards.Card
 

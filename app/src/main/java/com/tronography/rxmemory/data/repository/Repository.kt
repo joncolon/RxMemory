@@ -3,6 +3,7 @@ package com.tronography.rxmemory.data.repository
 
 import DEBUG
 import ERROR
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import com.tronography.rxmemory.data.local.CardDao
 import com.tronography.rxmemory.data.local.MutableCard
@@ -15,10 +16,8 @@ import com.tronography.rxmemory.data.model.pokemon.Pokemon
 import com.tronography.rxmemory.data.remote.PokeClient
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.data.state.GameStateLiveData
-import com.tronography.rxmemory.data.state.NetworkState
 import com.tronography.rxmemory.data.state.NetworkStateLiveData
 import com.tronography.rxmemory.utilities.GlideUtils
-import com.tronography.rxmemory.utilities.NetworkConnectivityHelper
 import executeInThread
 import io.reactivex.Observable
 import io.reactivex.Observable.fromCallable
@@ -32,9 +31,9 @@ import javax.inject.Singleton
 class Repository
 @Inject constructor(
 
-        private val liveGameState : GameStateLiveData,
+        private val liveGameState: GameStateLiveData,
 
-        private val liveNetworkState : NetworkStateLiveData,
+        private val liveNetworkState: NetworkStateLiveData,
 
         private val cardDao: CardDao,
 
@@ -58,15 +57,11 @@ class Repository
         return cardDao.getAllCards()
     }
 
-    fun updatePokemonAsCaught(id : Int, isCaught: Boolean){
+    fun updatePokemonAsCaught(id: Int, isCaught: Boolean) {
         executeInThread { pokemonDao.updateCaught(id, isCaught) }
     }
 
-    fun updatePokemonAsEncountered(id : Int, isEncountered: Boolean){
-        executeInThread { pokemonDao.updateEncountered(id, isEncountered) }
-    }
-
-    fun getCaughtPokemon() : LiveData<List<Pokemon>> {
+    fun getCaughtPokemon(): LiveData<List<Pokemon>> {
         return pokemonDao.getAllPokemon()
     }
 
@@ -74,6 +69,7 @@ class Repository
         return liveGameState
     }
 
+    @SuppressLint("CheckResult")
     fun createNewPokemonDeck() {
         liveGameState.setGameStateLiveData(GameState.LOADING)
         getAllPokemonFromDB()
@@ -112,7 +108,7 @@ class Repository
                     Observable.fromIterable(namedApiResourceList.results)
                             .subscribeOn(Schedulers.io())
                             .doOnSubscribe {
-                                DEBUG("Subscribed to ${namedApiResourceList} on ${Thread.currentThread().getName()}")
+                                DEBUG("Subscribed to ${namedApiResourceList} on ${Thread.currentThread().name}")
                             }
                 }
                 .flatMap({ namedApiResource: NamedApiResource ->
@@ -120,7 +116,7 @@ class Repository
                             .subscribeOn(Schedulers.io())
                 }, MAX_CONCURRENCY)
                 .doOnNext {
-                    DEBUG("Received on ${it.name} ${it.id} on ${Thread.currentThread().getName()}")
+                    DEBUG("Received on ${it.name} ${it.id} on ${Thread.currentThread().name}")
                 }
                 .map { it.toMutable() }
                 .toList()

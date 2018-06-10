@@ -9,13 +9,12 @@ import com.tronography.rxmemory.injection.modules.NetworkModule
 import com.tronography.rxmemory.injection.modules.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
-import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
 
 
 @Singleton
 @Component(modules = arrayOf(
-        AndroidInjectionModule::class,
+        dagger.android.AndroidInjectionModule::class,
         AppModule::class,
         DataModule::class,
         ActivityBuilder::class,

@@ -31,16 +31,6 @@
 
         </activity>
 
-        <activity
-            android:name=".ui.game.activity.GameActivity"
-            android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"/>
-
-        <activity
-            android:name=".ui.pokedex.activity.PokedexActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/noAnimTheme"/>
 
     </application>
 

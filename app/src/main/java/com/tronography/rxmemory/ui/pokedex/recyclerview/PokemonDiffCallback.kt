@@ -1,7 +1,6 @@
 package com.tronography.rxmemory.ui.pokedex.recyclerview
 
 import android.support.v7.util.DiffUtil
-import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.model.pokemon.Pokemon
 
 

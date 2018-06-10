@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav"
+            app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.tronography.rxmemory.ui.home.fragment.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_gameFragment"
+            app:destination="@+id/gameFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_pokedexFragment"
+            app:destination="@id/pokedexFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.tronography.rxmemory.ui.game.fragments.GameFragment"
+        android:label="GameFragment"
+        tools:layout="@layout/fragment_game">
+        <action
+            android:id="@+id/action_gameFragment_to_gameOverFragment"
+            app:destination="@id/gameOverFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/gameOverFragment"
+        android:name="com.tronography.rxmemory.ui.gameover.GameOverFragment"
+        android:label="GameOverFragment"
+        tools:layout="@layout/fragment_game_over">
+        <action
+            android:id="@+id/action_gameOverFragment_to_gameFragment"
+            app:popUpTo="@+id/gameFragment"
+            app:popUpToInclusive="false"/>
+        <action
+            android:id="@+id/action_gameOverFragment_to_homeFragment"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/pokedexFragment"
+        android:name="com.tronography.rxmemory.ui.pokedex.fragment.PokedexFragment"
+        android:label="PokedexFragment"
+        tools:layout="@layout/fragment_pokedex">
+        <action
+            android:id="@+id/action_pokedexFragment_to_pokedexEntryFragment"
+            app:destination="@id/pokedexEntryFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/pokedexEntryFragment"
+        android:name="com.tronography.rxmemory.ui.entry.fragment.PokedexEntryFragment"
+        android:label="PokedexEntryFragment"
+        tools:layout="@layout/fragment_pokedex_entry">
+        <argument
+            android:name="pokemon"
+            />
+    </fragment>
+</navigation>

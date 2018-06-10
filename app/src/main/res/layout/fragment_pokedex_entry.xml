@@ -10,14 +10,14 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.data.model.pokemon.Pokemon"/>
+            type="com.tronography.rxmemory.ui.entry.viewmodel.PokedexEntryViewModel"/>
 
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/pokedex_entry_layout"
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="175dp">
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_mid_horizontal"
@@ -31,18 +31,18 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5"/>
+            app:layout_constraintGuide_percent=".4"/>
 
         <ImageView
             android:id="@+id/sprite_iv"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
-            android:visibility="@{viewModel.caught ? View.VISIBLE : View.INVISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{viewModel.pokemon.caught ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_mid_horizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.sprites.frontDefault}"/>
+            bind:imageUrl="@{viewModel.pokemon.sprites.frontDefault}"/>
 
         <ImageView
             android:id="@+id/placeholder_iv"
@@ -51,8 +51,8 @@
             android:padding="14dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_pokeball_pixel"
-            android:visibility="@{viewModel.caught ? View.INVISIBLE : View.VISIBLE }"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{viewModel.pokemon.caught ? View.INVISIBLE : View.VISIBLE }"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_mid_horizontal"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -61,19 +61,16 @@
             android:id="@+id/pokemon_id_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="@font/poke_gameboy"
-            android:gravity="center_vertical"
-            android:text="@{`No.` + String.valueOf(viewModel.id)}"
+            android:text="@{`No.` + String.valueOf(viewModel.pokemon.id)}"
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline_mid_vertical"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toEndOf="@id/sprite_iv"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="No.021"
+            app:layout_constraintEnd_toEndOf="@+id/sprite_iv"
+            app:layout_constraintStart_toStartOf="@+id/sprite_iv"
+            app:layout_constraintTop_toBottomOf="@+id/sprite_iv"
+            tools:text="No. 21"
             />
 
         <TextView
@@ -82,15 +79,48 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poke_gameboy"
             android:gravity="center_vertical"
-            android:text="@{viewModel.caught ? viewModel.name : `???`}"
+            android:text="@{viewModel.pokemon.caught ? viewModel.pokemon.name : `???`}"
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/pokemon_height_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/guideline_mid_vertical"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/sprite_iv"
+            app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="Pikachu"
+            />
+
+        <TextView
+            android:id="@+id/pokemon_height_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poke_gameboy"
+            android:gravity="center_vertical"
+            android:text="@{`HEIGHT ` + String.valueOf(viewModel.pokemon.height)}"
+            app:autoSizePresetSizes="@array/autosize_text_sizes"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toTopOf="@+id/pokemon_weight_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_mid_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_name_tv"
+            tools:text="HEIGHT: 22"/>
+
+        <TextView
+            android:id="@+id/pokemon_weight_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poke_gameboy"
+            android:gravity="center_vertical"
+            android:text="@{`WEIGHT ` + String.valueOf(viewModel.pokemon.weight)}"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toTopOf="@+id/guideline_mid_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline_mid_vertical"
+            app:layout_constraintTop_toBottomOf="@+id/pokemon_height_tv"
+            tools:text="WEIGHT: 15"
             />
 
     </android.support.constraint.ConstraintLayout>

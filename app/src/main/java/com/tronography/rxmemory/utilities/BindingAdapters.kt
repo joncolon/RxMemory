@@ -1,14 +1,9 @@
 package com.tronography.rxmemory.utilities
 
 import android.databinding.BindingAdapter
-import android.graphics.Bitmap
 import android.widget.ImageView
-import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.tronography.rxmemory.injection.modules.GlideApp
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_LEFT
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation.CornerType.TOP_RIGHT
 
 
 object BindingAdapters {
@@ -24,7 +19,6 @@ object BindingAdapters {
     @BindingAdapter("imageUrl")
     @JvmStatic
     fun setImageUrl(imageView: ImageView, url: String?) {
-
         loadImage(url, imageView)
     }
 

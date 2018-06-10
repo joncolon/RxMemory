@@ -12,10 +12,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentPokedexBinding
-import com.tronography.rxmemory.ui.game.recyclerview.GameItemAnimator
 import com.tronography.rxmemory.ui.pokedex.recyclerview.PokemonAdapter
 import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
@@ -72,20 +72,29 @@ class PokedexFragment : Fragment() {
 
     private fun observeLiveData() {
         observePokemonDatabase()
+
+        viewModel.navigateToPokedexDetailsFragment.observe(this, Observer { pokemon ->
+            DEBUG("$pokemon clicked")
+            pokemon.let {
+                val bundle = Bundle()
+                bundle.putParcelable("pokemon", pokemon)
+                Navigation.findNavController(activity!!, R.id.nav_host)
+                        .navigate(R.id.action_pokedexFragment_to_pokedexEntryFragment, bundle)
+            }
+        })
     }
 
     private fun observePokemonDatabase() {
         viewModel.getPokemon().observe(this, Observer { pokemonEntries ->
-            DEBUG("${pokemonEntries?.size} received ")
-            DEBUG("${pokemonEntries} received ")
-
+            DEBUG("${pokemonEntries?.size} pokemon entries received ")
             pokemonEntries?.let { adapter.updateList(pokemonEntries) }
         })
     }
 
     private fun setUpRecyclerView() {
-        activity?.let {
+        activity.let {
             DEBUG("Setting up RecyclerView...")
+
             val recyclerView = viewDataBinding.recyclerView
             linearLayoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
             recyclerView.layoutManager = linearLayoutManager

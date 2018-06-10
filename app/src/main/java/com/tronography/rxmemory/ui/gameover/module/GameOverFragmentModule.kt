@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.game.modules
+package com.tronography.rxmemory.ui.gameover.module
 
 import dagger.Module
 

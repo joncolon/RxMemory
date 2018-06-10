@@ -2,13 +2,14 @@ package com.tronography.rxmemory.ui.pokedex.recyclerview
 
 import DEBUG
 import android.support.v7.util.DiffUtil
+import android.support.v7.util.DiffUtil.calculateDiff
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.tronography.rxmemory.data.model.pokemon.Pokemon
 import com.tronography.rxmemory.databinding.ItemPokedexEntryBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
-import com.tronography.rxmemory.ui.pokedex.listeners.OnPokemonClickListener
+import com.tronography.rxmemory.ui.common.listeners.OnPokemonClickListener
 import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel
 import getResourceEntryName
 import java.util.*
@@ -24,8 +25,8 @@ class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
     }
 
     override fun onPokemonClicked(pokemon: Pokemon) {
-            DEBUG("Click Successful")
-            pokedexViewModel.onPokemonClicked(pokemon)
+        DEBUG("Click Successful")
+        pokedexViewModel.onPokemonClicked(pokemon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -37,7 +38,7 @@ class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
 
     fun updateList(newPokemon: List<Pokemon>) {
         val result: DiffUtil.DiffResult =
-                DiffUtil.calculateDiff(PokemonDiffCallback(newPokemon, pokedexEntries), true)
+                calculateDiff(PokemonDiffCallback(newPokemon, pokedexEntries), true)
 
         pokedexEntries.clear()
         pokedexEntries.addAll(newPokemon)

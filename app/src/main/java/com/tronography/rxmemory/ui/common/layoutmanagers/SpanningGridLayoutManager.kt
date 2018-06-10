@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.layoutmanagers
+package com.tronography.rxmemory.ui.common.layoutmanagers
 
 import android.content.Context
 import android.support.v7.widget.GridLayoutManager
@@ -20,19 +20,19 @@ class SpanningGridLayoutManager : GridLayoutManager {
             attrs: AttributeSet,
             defStyleAttr: Int,
             defStyleRes: Int
-    ) : super(context, attrs, defStyleAttr, defStyleRes) {}
+    ) : super(context, attrs, defStyleAttr, defStyleRes)
 
     constructor(
             context: Context,
             spanCount: Int
-    ) : super(context, spanCount) {}
+    ) : super(context, spanCount)
 
     constructor(
             context: Context,
             spanCount: Int,
             orientation: Int,
             reverseLayout: Boolean
-    ) : super(context, spanCount, orientation, reverseLayout) {}
+    ) : super(context, spanCount, orientation, reverseLayout)
 
     override fun generateDefaultLayoutParams(): RecyclerView.LayoutParams {
         return spanLayoutSize(super.generateDefaultLayoutParams())
@@ -47,10 +47,13 @@ class SpanningGridLayoutManager : GridLayoutManager {
     }
 
     private fun spanLayoutSize(layoutParams: RecyclerView.LayoutParams): RecyclerView.LayoutParams {
-        if (orientation == LinearLayoutManager.HORIZONTAL) {
-            layoutParams.width = Math.round(horizontalSpace / Math.ceil((itemCount / spanCount).toDouble())).toInt()
-        } else if (orientation == LinearLayoutManager.VERTICAL) {
-            layoutParams.height = Math.round(verticalSpace / Math.ceil((itemCount / spanCount).toDouble())).toInt()
+        when (orientation) {
+            LinearLayoutManager.HORIZONTAL -> {
+                layoutParams.width = Math.round(horizontalSpace / Math.ceil((itemCount / spanCount).toDouble())).toInt()
+            }
+            LinearLayoutManager.VERTICAL -> {
+                layoutParams.height = Math.round(verticalSpace / Math.ceil((itemCount / spanCount).toDouble())).toInt()
+            }
         }
         return layoutParams
     }

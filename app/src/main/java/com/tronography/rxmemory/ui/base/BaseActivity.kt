@@ -5,12 +5,11 @@ import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.annotation.LayoutRes
-import android.support.v4.app.FragmentActivity
-import com.tronography.rxmemory.ui.navigation.fragmentNavigator
+import android.support.v7.app.AppCompatActivity
 import dagger.android.AndroidInjection
 
 
-abstract class BaseActivity<T : ViewDataBinding, out V : ViewModel> : FragmentActivity() {
+abstract class BaseActivity<T : ViewDataBinding, out V : ViewModel> : AppCompatActivity() {
 
     lateinit var viewDataBinding: T
 

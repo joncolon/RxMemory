@@ -2,7 +2,10 @@ package com.tronography.rxmemory.data.local
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.tronography.rxmemory.data.model.pokemon.*
+import com.tronography.rxmemory.data.model.pokemon.Pokemon
+import com.tronography.rxmemory.data.model.pokemon.Species
+import com.tronography.rxmemory.data.model.pokemon.Sprites
+import com.tronography.rxmemory.data.model.pokemon.TypesItem
 
 @Entity(tableName = AppDatabase.POKEMON_TABLE)
 class MutablePokemon(

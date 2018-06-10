@@ -24,10 +24,10 @@ class GameStateLiveData @Inject constructor() : LiveData<GameState>() {
     }
 
     @MainThread
-    override fun observe(owner: LifecycleOwner, observer: Observer<GameState>) =
-            super.observe(owner, Observer<GameState> { value ->
-                if (pending.compareAndSet(true, false)) {
-                    observer.onChanged(value)
-                }
-            })
+    override fun observe(owner: LifecycleOwner, observer: Observer<GameState>) {
+        super.observe(owner, observer)
+        if (pending.compareAndSet(true, false)) {
+            observer.onChanged(value)
+        }
+    }
 }

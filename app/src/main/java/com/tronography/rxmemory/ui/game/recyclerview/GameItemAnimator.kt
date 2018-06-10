@@ -15,8 +15,6 @@ import com.tronography.rxmemory.utilities.ViewUtils
 import java.util.*
 
 
-
-
 class GameItemAnimator : DefaultItemAnimator() {
 
     private var cardFlipAnimationMap: MutableMap<RecyclerView.ViewHolder, AnimatorSet> = HashMap()
@@ -84,12 +82,9 @@ class GameItemAnimator : DefaultItemAnimator() {
             }
         })
 
-
-        animatorSet.play(finishSpin).with(rotateImageLeft)
-                .after(startSpin)
-
+        animatorSet.play(finishSpin).with(rotateImageLeft).after(startSpin)
         animatorSet.start()
-        cardFlipAnimationMap.put(holder, animatorSet)
+        cardFlipAnimationMap[holder] = animatorSet
     }
 
     private fun animateFlipRevealCardBack(holder: GameAdapter.CardViewHolder) {
@@ -134,7 +129,7 @@ class GameItemAnimator : DefaultItemAnimator() {
         animatorSet.play(finishSpin).after(startSpin)
 
         animatorSet.start()
-        cardFlipAnimationMap.put(holder, animatorSet)
+        cardFlipAnimationMap[holder] = animatorSet
     }
 
     private fun animateSpinEntry(holder: GameAdapter.CardViewHolder) {
@@ -166,11 +161,7 @@ class GameItemAnimator : DefaultItemAnimator() {
     }
 
     override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
-        if (viewHolder.layoutPosition > lastAddAnimatedItem) {
-            lastAddAnimatedItem++
-            runEnterAnimation(viewHolder as GameAdapter.CardViewHolder)
-            return false
-        }
+        runEnterAnimation(viewHolder as GameAdapter.CardViewHolder)
         return false
     }
 
@@ -178,6 +169,7 @@ class GameItemAnimator : DefaultItemAnimator() {
     private fun runEnterAnimation(holder: GameAdapter.CardViewHolder) {
         val screenHeight = ViewUtils.getScreenHeight(holder.itemView.context)
         holder.itemView.translationY = screenHeight.toFloat()
+
         holder.itemView.animate()
                 .translationY(0f)
                 .setInterpolator(DecelerateInterpolator(3f))
@@ -247,8 +239,6 @@ class GameItemAnimator : DefaultItemAnimator() {
         val ENTER_DURATION: Long = 800
     }
 
-    class CardItemHolderInfo() : RecyclerView.ItemAnimator.ItemHolderInfo() {
-
-    }
+    class CardItemHolderInfo : RecyclerView.ItemAnimator.ItemHolderInfo()
 
 }

@@ -43,8 +43,7 @@
             android:paddingRight="10dp"
             android:paddingTop="10dp"
             android:scaleType="fitCenter"
-            android:visibility="gone"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            android:visibility="gone"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

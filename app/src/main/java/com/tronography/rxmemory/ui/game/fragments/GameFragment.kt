@@ -12,15 +12,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import androidx.navigation.Navigation
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState.*
 import com.tronography.rxmemory.databinding.FragmentGameBinding
+import com.tronography.rxmemory.ui.common.layoutmanagers.SpanningGridLayoutManager
 import com.tronography.rxmemory.ui.game.recyclerview.GameAdapter
 import com.tronography.rxmemory.ui.game.recyclerview.GameItemAnimator
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
-import com.tronography.rxmemory.ui.layoutmanagers.SpanningGridLayoutManager
-import com.tronography.rxmemory.ui.navigation.fragmentNavigator
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
@@ -65,6 +65,7 @@ class GameFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         initAdapter()
+        setUpRecyclerView()
         observeLiveData()
     }
 
@@ -81,12 +82,7 @@ class GameFragment : Fragment() {
         viewModel.observeDeck().observe(this, Observer { cards ->
             DEBUG("${cards?.size} received ")
             DEBUG("${cards} received ")
-
-            cards?.let {
-                when (cards.size == FULL_DECK_SIZE) {
-                    true -> adapter.updateList(cards)
-                }
-            }
+            cards?.let { adapter.updateList(cards) }
         })
     }
 
@@ -95,13 +91,11 @@ class GameFragment : Fragment() {
                 .observe(this, Observer { gameState ->
                     DEBUG("GAME STATE : ${gameState}")
                     when (gameState) {
-
                         LOADING -> {
                             //todo: show loading status
                         }
 
                         LOAD_COMPLETE -> {
-                            setUpRecyclerView()
                         }
 
                         IN_PROGRESS -> adapter.enableCardClick()
@@ -113,28 +107,35 @@ class GameFragment : Fragment() {
                             showGameOverFragment()
                         }
 
+                        ERROR -> {
+                            //todo: show error status
+                        }
                     }
                 })
     }
 
     private fun showGameOverFragment() {
-        activity?.let { fragmentNavigator.showGameOverFragment(it) }
+        Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameFragment_to_gameOverFragment)
     }
 
     private fun setUpRecyclerView() {
         activity?.let {
             DEBUG("Setting up RecyclerView...")
             val recyclerView = viewDataBinding.recyclerView
+            spanningGridLayoutManager = SpanningGridLayoutManager(
+                    it,
+                    4,
+                    GridLayout.VERTICAL,
+                    false
+            )
 
-            spanningGridLayoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
-            recyclerView.layoutManager = spanningGridLayoutManager
-            recyclerView.setHasFixedSize(true)
-            recyclerView.itemAnimator = GameItemAnimator()
-            recyclerView.itemAnimator.addDuration = 0
-            recyclerView.adapter = adapter
-            recyclerView.getItemAnimator().addDuration = 0
-            recyclerView.getItemAnimator().removeDuration = 0
-
+            with(recyclerView) {
+                layoutManager = spanningGridLayoutManager
+                itemAnimator = GameItemAnimator()
+                itemAnimator.addDuration = 0
+                itemAnimator.removeDuration = 0
+                adapter = adapter
+            }
         }
     }
 

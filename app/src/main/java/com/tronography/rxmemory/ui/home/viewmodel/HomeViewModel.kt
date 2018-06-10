@@ -15,13 +15,13 @@ class HomeViewModel
     private val navigateToSettingsFragmentEvent = SingleLiveEvent<String>()
     private val navigateToPokedexActivityEvent = SingleLiveEvent<String>()
 
-    val navigateToGameActivity : SingleLiveEvent<String>
+    val navigateToGameActivity: SingleLiveEvent<String>
         get() = navigateToGameActivityEvent
 
-    val navigateToSettingsFragment : SingleLiveEvent<String>
+    val navigateToSettingsFragment: SingleLiveEvent<String>
         get() = navigateToSettingsFragmentEvent
 
-    val navigateToPokedexActivity : SingleLiveEvent<String>
+    val navigateToPokedexActivity: SingleLiveEvent<String>
         get() = navigateToPokedexActivityEvent
 
     init {
@@ -30,15 +30,15 @@ class HomeViewModel
     }
 
     private fun onSettingsButtonClicked(viewId: String) {
-        navigateToSettingsFragmentEvent.value = viewId
+        navigateToSettingsFragmentEvent.setValue(viewId)
     }
 
     fun onPokedexButtonClicked(viewId: String) {
-        navigateToPokedexActivityEvent.value = viewId
+        navigateToPokedexActivityEvent.setValue(viewId)
     }
 
     fun onPlayButtonClicked(viewId: String) {
-        navigateToGameActivityEvent.value = viewId
+        navigateToGameActivityEvent.setValue(viewId)
     }
 
     override fun onCleared() {

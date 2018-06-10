@@ -3,7 +3,6 @@ package com.tronography.rxmemory.data.local
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.tronography.rxmemory.data.model.cards.Card
-import java.util.*
 
 
 @Entity(tableName = AppDatabase.CARD_TABLE)

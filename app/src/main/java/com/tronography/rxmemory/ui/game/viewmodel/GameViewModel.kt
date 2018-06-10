@@ -10,7 +10,6 @@ import com.tronography.rxmemory.data.model.cards.Card
 import com.tronography.rxmemory.data.repository.Repository
 import com.tronography.rxmemory.data.state.GameState
 import com.tronography.rxmemory.data.state.GameState.*
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,7 +47,7 @@ class GameViewModel
         return repository.getCards()
     }
 
-    fun refreshCards() {
+    private fun refreshCards() {
         DEBUG("refreshCards called")
         gameStateDataMerger.addSource(repository.getLiveGameState(), { state -> gameStateDataMerger.value = state })
         gameStateDataMerger.addSource(gameState, { state -> gameStateDataMerger.value = state })

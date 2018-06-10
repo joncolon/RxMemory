@@ -16,7 +16,7 @@
         android:id="@+id/pokedex_fragment_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.game.activity.GameActivity">
+        tools:context=".ui.pokedex.activity.PokedexActivity">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_card" />
+            tools:listitem="@layout/item_pokedex_entry" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -5,7 +5,6 @@ import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.support.annotation.MainThread
-
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -31,7 +30,6 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
             DEBUG("Multiple observers registered but only one will be notified of changes.")
         }
 
-        // Observe the internal MutableLiveData
         super.observe(owner, Observer { t: T? ->
             if (mPending.compareAndSet(true, false)) {
                 observer.onChanged(t)

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.data.model.cards.Card" />
+            type="com.tronography.rxmemory.data.model.cards.Card"/>
 
     </data>
 
@@ -53,7 +53,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:imageUrl="@{viewModel.photoUrl}" />
+                    bind:imageUrl="@{viewModel.photoUrl}"/>
 
                 <ImageView
                     android:id="@+id/card_back_image"
@@ -69,7 +69,7 @@
                     app:layout_constraintDimensionRatio="@string/cardImageRatio"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"/>
 
             </android.support.constraint.ConstraintLayout>
 

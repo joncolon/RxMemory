@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.home.fragment
+package com.tronography.rxmemory.ui.gameover
 
 import DEBUG
 import android.arch.lifecycle.Observer
@@ -14,28 +14,27 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
-import com.tronography.rxmemory.databinding.FragmentHomeBinding
-import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
+import com.tronography.rxmemory.databinding.FragmentGameOverBinding
+import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
-import getResourceEntryName
 import javax.inject.Inject
 
-class HomeFragment : Fragment() {
+class GameOverFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: DaggerViewModelFactory
 
     @LayoutRes
-    private val layoutId = R.layout.fragment_home
+    private val layoutId = R.layout.fragment_game_over
 
     private val bindingVariable = BR.viewModel
 
-    private lateinit var viewDataBinding: FragmentHomeBinding
+    private lateinit var viewDataBinding: FragmentGameOverBinding
 
     private lateinit var rootView: View
 
-    lateinit var viewModel: HomeViewModel
+    lateinit var viewModel: GameViewModel
 
 
     override fun onAttach(context: Context?) {
@@ -44,9 +43,10 @@ class HomeFragment : Fragment() {
         DEBUG("ATTACHED")
     }
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView
@@ -57,31 +57,25 @@ class HomeFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         setUpClickListeners()
-        observeNavigationEvents()
+        viewModel.getAttemptCount().observe(this, Observer { count ->
+            count?.let { displayAttemptCount(it) }
+        })
     }
 
-    private fun observeNavigationEvents() {
-        viewModel.navigateToGameActivity.observe(this, Observer { viewId ->
-            DEBUG("$viewId clicked")
-            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_homeFragment_to_gameFragment)
-        })
-
-        viewModel.navigateToPokedexActivity.observe(this, Observer { viewId ->
-            DEBUG("$viewId clicked")
-            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_homeFragment_to_pokedexFragment)
-        })
+    private fun displayAttemptCount(attemptCount: Int) {
+        viewDataBinding.attemptCountValueTv.text = attemptCount.toString()
     }
 
     private fun setUpClickListeners() {
-        viewDataBinding.playButton.setOnClickListener {
-            viewModel.onPlayButtonClicked(it.getResourceEntryName())
+        viewDataBinding.yesButton.setOnClickListener {
+            viewModel.startGame()
+            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameOverFragment_to_gameFragment)
         }
 
-        viewDataBinding.pokedexButton.setOnClickListener {
-            viewModel.onPokedexButtonClicked(it.getResourceEntryName())
+        viewDataBinding.noButton.setOnClickListener {
+            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameOverFragment_to_homeFragment)
         }
     }
-
 
     private fun performDependencyInjection() {
         AndroidSupportInjection.inject(this)
@@ -93,7 +87,7 @@ class HomeFragment : Fragment() {
     }
 
     companion object {
-        const val TAG = "HomeFragment"
+        const val TAG = "GameOverFragment"
     }
 
 }

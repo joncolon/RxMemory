@@ -7,4 +7,5 @@
     <string name="card_ratio_horizontal">3.5:2.5</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="blue_light_indicator">Blue light indicator</string>
 </resources>

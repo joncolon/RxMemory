@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.ui.game.viewmodel.GameViewModel" />
+            type="com.tronography.rxmemory.ui.game.viewmodel.GameViewModel"/>
 
     </data>
 
@@ -17,31 +17,31 @@
         android:layout_height="match_parent"
         tools:context=".ui.home.activity.HomeActivity">
 
-        <android.support.v7.widget.RecyclerView
+        <com.tronography.rxmemory.ui.common.layoutmanagers.GridRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:animateLayoutChanges="false"
             android:clipToPadding="false"
             android:focusableInTouchMode="true"
-            android:paddingBottom="16dp"
             android:paddingLeft="6dp"
-            android:paddingRight="6dp"
             android:paddingTop="16dp"
+            android:paddingRight="6dp"
+            android:paddingBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_card" />
+            tools:listitem="@layout/item_card"/>
 
         <ImageView
             android:id="@+id/matched_card_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="10dp"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
             android:scaleType="fitCenter"
             android:visibility="gone"/>
 

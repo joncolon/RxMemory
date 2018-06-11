@@ -37,7 +37,6 @@ class HomeFragment : Fragment() {
 
     lateinit var viewModel: HomeViewModel
 
-
     override fun onAttach(context: Context?) {
         performDependencyInjection()
         super.onAttach(context)
@@ -46,7 +45,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(HomeViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
         return rootView
@@ -61,12 +60,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeNavigationEvents() {
-        viewModel.navigateToGameActivity.observe(this, Observer { viewId ->
+        viewModel.navigateToGame.observe(this, Observer { viewId ->
             DEBUG("$viewId clicked")
             Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_homeFragment_to_gameFragment)
         })
 
-        viewModel.navigateToPokedexActivity.observe(this, Observer { viewId ->
+        viewModel.navigateToPokedex.observe(this, Observer { viewId ->
             DEBUG("$viewId clicked")
             Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_homeFragment_to_pokedexFragment)
         })
@@ -81,7 +80,6 @@ class HomeFragment : Fragment() {
             viewModel.onPokedexButtonClicked(it.getResourceEntryName())
         }
     }
-
 
     private fun performDependencyInjection() {
         AndroidSupportInjection.inject(this)

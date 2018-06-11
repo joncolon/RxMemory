@@ -1,5 +1,6 @@
 package com.tronography.rxmemory.ui.game.recyclerview
 
+import DEBUG
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -20,7 +21,6 @@ class GameItemAnimator : DefaultItemAnimator() {
     private var cardFlipAnimationMap: MutableMap<RecyclerView.ViewHolder, AnimatorSet> = HashMap()
     private var spinEntryAnimationMap: MutableMap<RecyclerView.ViewHolder, ObjectAnimator> = HashMap()
 
-    private var lastAddAnimatedItem = -1
 
     override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
         return true
@@ -157,26 +157,30 @@ class GameItemAnimator : DefaultItemAnimator() {
         animatorSet.play(bounceAnimX).with(bounceAnimY).after(rotationAnim)
         animatorSet.start()
 
-        cardFlipAnimationMap.put(holder, animatorSet)
+        cardFlipAnimationMap[holder] = animatorSet
     }
 
     override fun animateAdd(viewHolder: RecyclerView.ViewHolder): Boolean {
-        runEnterAnimation(viewHolder as GameAdapter.CardViewHolder)
-        return false
+        runEnterAnimation(viewHolder as GameAdapter.CardViewHolder, viewHolder.layoutPosition)
+        return true
     }
 
 
-    private fun runEnterAnimation(holder: GameAdapter.CardViewHolder) {
+    private fun runEnterAnimation(holder: GameAdapter.CardViewHolder, layoutPosition: Int) {
         val screenHeight = ViewUtils.getScreenHeight(holder.itemView.context)
         holder.itemView.translationY = screenHeight.toFloat()
 
+        val START_DELAY = (layoutPosition * 20).toLong()
+        DEBUG(START_DELAY.toString())
         holder.itemView.animate()
                 .translationY(0f)
                 .setInterpolator(DecelerateInterpolator(3f))
                 .setDuration(ENTER_DURATION)
+                .setStartDelay(START_DELAY)
                 .setListener(object : AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: Animator) {
                         dispatchAddFinished(holder)
+                        DEBUG("Anim finished on position - ${holder.adapterPosition} ")
                     }
                 })
                 .start()
@@ -236,7 +240,7 @@ class GameItemAnimator : DefaultItemAnimator() {
         private val SPIN_DURATION: Long = 300
         private val ROTATION_DURATION: Long = 300
         private val BOUNCE_DURATION: Long = 400
-        val ENTER_DURATION: Long = 800
+        val ENTER_DURATION: Long = 700
     }
 
     class CardItemHolderInfo : RecyclerView.ItemAnimator.ItemHolderInfo()

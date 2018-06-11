@@ -69,11 +69,8 @@ class GameOverFragment : Fragment() {
     private fun setUpClickListeners() {
         viewDataBinding.yesButton.setOnClickListener {
             viewModel.startGame()
-            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameOverFragment_to_gameFragment)
-        }
-
-        viewDataBinding.noButton.setOnClickListener {
-            Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameOverFragment_to_homeFragment)
+            Navigation.findNavController(activity!!, R.id.nav_host)
+                    .navigate(R.id.action_gameOverFragment_to_gameFragment)
         }
     }
 

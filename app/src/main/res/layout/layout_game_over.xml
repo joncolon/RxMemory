@@ -93,7 +93,7 @@
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(0).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -108,7 +108,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_three"
             app:layout_constraintStart_toEndOf="@id/pokemon_one"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(1).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -123,7 +123,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_four"
             app:layout_constraintStart_toEndOf="@id/pokemon_two"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(2).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -138,7 +138,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_five"
             app:layout_constraintStart_toEndOf="@id/pokemon_three"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(3).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -153,7 +153,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_six"
             app:layout_constraintStart_toEndOf="@id/pokemon_four"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(4).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -168,7 +168,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_seven"
             app:layout_constraintStart_toEndOf="@id/pokemon_five"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(5).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -183,7 +183,7 @@
             app:layout_constraintEnd_toStartOf="@id/pokemon_eight"
             app:layout_constraintStart_toEndOf="@id/pokemon_six"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(6).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
@@ -198,7 +198,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/pokemon_seven"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.photoUrl}"
+            bind:imageUrl="@{viewModel.matchedPokemon.get(7).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
 

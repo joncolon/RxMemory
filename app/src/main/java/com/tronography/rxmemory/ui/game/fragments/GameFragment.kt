@@ -39,16 +39,13 @@ class GameFragment : Fragment() {
 
     private lateinit var rootView: View
 
-    private lateinit var adapter: GameAdapter
-
-    private lateinit var spanningGridLayoutManager: SpanningGridLayoutManager
+    private lateinit var gameAdapter: GameAdapter
 
     lateinit var viewModel: GameViewModel
 
-
     override fun onAttach(context: Context?) {
-        performDependencyInjection()
         super.onAttach(context)
+        performDependencyInjection()
         DEBUG("ATTACHED")
     }
 
@@ -57,6 +54,7 @@ class GameFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
+        setUpRecyclerView()
         return rootView
     }
 
@@ -64,8 +62,6 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
-        initAdapter()
-        setUpRecyclerView()
         observeLiveData()
     }
 
@@ -80,9 +76,9 @@ class GameFragment : Fragment() {
 
     private fun observeLiveDeck() {
         viewModel.observeDeck().observe(this, Observer { cards ->
-            DEBUG("${cards?.size} received ")
-            DEBUG("${cards} received ")
-            cards?.let { adapter.updateList(cards) }
+            cards?.let {
+                    gameAdapter.updateList(cards)
+            }
         })
     }
 
@@ -98,12 +94,12 @@ class GameFragment : Fragment() {
                         LOAD_COMPLETE -> {
                         }
 
-                        IN_PROGRESS -> adapter.enableCardClick()
+                        IN_PROGRESS -> gameAdapter.enableCardClick()
 
-                        RESETTING_CARDS -> adapter.disableCardClicks()
+                        RESETTING_CARDS -> gameAdapter.disableCardClicks()
 
                         GAME_OVER -> {
-                            adapter.disableCardClicks()
+                            gameAdapter.disableCardClicks()
                             showGameOverFragment()
                         }
 
@@ -121,26 +117,14 @@ class GameFragment : Fragment() {
     private fun setUpRecyclerView() {
         activity?.let {
             DEBUG("Setting up RecyclerView...")
-            val recyclerView = viewDataBinding.recyclerView
-            spanningGridLayoutManager = SpanningGridLayoutManager(
-                    it,
-                    4,
-                    GridLayout.VERTICAL,
-                    false
-            )
+            gameAdapter = GameAdapter(viewModel)
 
-            with(recyclerView) {
-                layoutManager = spanningGridLayoutManager
+            with(viewDataBinding.recyclerView) {
                 itemAnimator = GameItemAnimator()
-                itemAnimator.addDuration = 0
-                itemAnimator.removeDuration = 0
-                adapter = adapter
+                adapter = gameAdapter
+                layoutManager = SpanningGridLayoutManager(it, 4, GridLayout.VERTICAL, false)
             }
         }
-    }
-
-    private fun initAdapter() {
-        adapter = GameAdapter(viewModel)
     }
 
     override fun onDetach() {
@@ -149,7 +133,6 @@ class GameFragment : Fragment() {
     }
 
     companion object {
-        private const val FULL_DECK_SIZE = 16
         const val TAG = "GameFragment"
     }
 

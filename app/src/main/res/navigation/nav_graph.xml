@@ -12,10 +12,13 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_gameFragment"
-            app:destination="@+id/gameFragment"/>
+            app:destination="@+id/gameFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"/>
         <action
             android:id="@+id/action_homeFragment_to_pokedexFragment"
-            app:destination="@id/pokedexFragment"/>
+            app:destination="@id/pokedexFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"/>
     </fragment>
 
     <fragment
@@ -25,7 +28,9 @@
         tools:layout="@layout/fragment_game">
         <action
             android:id="@+id/action_gameFragment_to_gameOverFragment"
-            app:destination="@id/gameOverFragment"/>
+            app:destination="@id/gameOverFragment"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"/>
     </fragment>
 
     <fragment
@@ -35,12 +40,13 @@
         tools:layout="@layout/fragment_game_over">
         <action
             android:id="@+id/action_gameOverFragment_to_gameFragment"
-            app:popUpTo="@+id/gameFragment"
-            app:popUpToInclusive="false"/>
+            app:popUpTo="@id/gameFragment"
+            app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_gameOverFragment_to_homeFragment"
-            app:popUpTo="@+id/homeFragment"
-            app:popUpToInclusive="false"/>
+            app:destination="@id/homeFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -52,6 +58,7 @@
             android:id="@+id/action_pokedexFragment_to_pokedexEntryFragment"
             app:destination="@id/pokedexEntryFragment"/>
     </fragment>
+
     <fragment
         android:id="@+id/pokedexEntryFragment"
         android:name="com.tronography.rxmemory.ui.entry.fragment.PokedexEntryFragment"
@@ -61,4 +68,7 @@
             android:name="pokemon"
             />
     </fragment>
+    <action
+        android:id="@+id/action_global_homeFragment"
+        app:destination="@id/homeFragment"/>
 </navigation>

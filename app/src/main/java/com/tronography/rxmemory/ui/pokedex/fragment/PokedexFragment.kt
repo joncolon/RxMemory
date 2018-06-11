@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.LinearLayoutManager.VERTICAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,8 @@ import androidx.navigation.Navigation
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.FragmentPokedexBinding
-import com.tronography.rxmemory.ui.pokedex.recyclerview.PokemonAdapter
+import com.tronography.rxmemory.ui.pokedex.recyclerview.PokedexAdapter
+import com.tronography.rxmemory.ui.pokedex.recyclerview.PokedexItemAnimator
 import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
@@ -36,12 +38,16 @@ class PokedexFragment : Fragment() {
 
     private lateinit var rootView: View
 
-    private lateinit var adapter: PokemonAdapter
+    private lateinit var pokedexAdapter: PokedexAdapter
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
     lateinit var viewModel: PokedexViewModel
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onAttach(context: Context?) {
         performDependencyInjection()
@@ -54,6 +60,7 @@ class PokedexFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(PokedexViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
+        setUpRecyclerView()
         return rootView
     }
 
@@ -61,8 +68,6 @@ class PokedexFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
-        initAdapter()
-        setUpRecyclerView()
         observeLiveData()
     }
 
@@ -72,14 +77,15 @@ class PokedexFragment : Fragment() {
 
     private fun observeLiveData() {
         observePokemonDatabase()
+        observeOnPokemonSelected()
+    }
 
-        viewModel.navigateToPokedexDetailsFragment.observe(this, Observer { pokemon ->
+    private fun observeOnPokemonSelected() {
+        viewModel.getSelectedPokemon.observe(this, Observer { pokemon ->
             DEBUG("$pokemon clicked")
-            pokemon.let {
-                val bundle = Bundle()
-                bundle.putParcelable("pokemon", pokemon)
+            pokemon?.let {
                 Navigation.findNavController(activity!!, R.id.nav_host)
-                        .navigate(R.id.action_pokedexFragment_to_pokedexEntryFragment, bundle)
+                        .navigate(R.id.action_pokedexFragment_to_pokedexEntryFragment)
             }
         })
     }
@@ -87,23 +93,21 @@ class PokedexFragment : Fragment() {
     private fun observePokemonDatabase() {
         viewModel.getPokemon().observe(this, Observer { pokemonEntries ->
             DEBUG("${pokemonEntries?.size} pokemon entries received ")
-            pokemonEntries?.let { adapter.updateList(pokemonEntries) }
+            pokemonEntries?.let { pokedexAdapter.updateList(pokemonEntries) }
         })
     }
 
     private fun setUpRecyclerView() {
-        activity.let {
+        activity.let { context ->
             DEBUG("Setting up RecyclerView...")
-
-            val recyclerView = viewDataBinding.recyclerView
-            linearLayoutManager = LinearLayoutManager(it, LinearLayoutManager.VERTICAL, false)
-            recyclerView.layoutManager = linearLayoutManager
-            recyclerView.adapter = adapter
+            pokedexAdapter = PokedexAdapter(viewModel)
+            with(viewDataBinding.recyclerView) {
+                linearLayoutManager = LinearLayoutManager(context, VERTICAL, false)
+                layoutManager = linearLayoutManager
+                adapter = pokedexAdapter
+                itemAnimator = PokedexItemAnimator()
+            }
         }
-    }
-
-    private fun initAdapter() {
-        adapter = PokemonAdapter(viewModel)
     }
 
     override fun onDetach() {

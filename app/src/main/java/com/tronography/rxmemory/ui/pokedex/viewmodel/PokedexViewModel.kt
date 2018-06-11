@@ -18,10 +18,12 @@ class PokedexViewModel
         DEBUG("Initializing PokedexViewModel")
     }
 
-    private val navigateToPokedexDetailsEvent = SingleLiveEvent<Pokemon>()
+    private val selectedPokemon = SingleLiveEvent<Pokemon>()
 
-    val navigateToPokedexDetailsFragment: SingleLiveEvent<Pokemon>
-        get() = navigateToPokedexDetailsEvent
+    val getSelectedPokemon: SingleLiveEvent<Pokemon>
+        get() = selectedPokemon
+
+    var pokemon: Pokemon? = null
 
     fun getPokemon(): LiveData<List<Pokemon>> {
         return repository.getCaughtPokemon()
@@ -29,7 +31,8 @@ class PokedexViewModel
 
     fun onPokemonClicked(pokemon: Pokemon) {
         DEBUG("Pokemon clicked : ${pokemon.name}")
-        navigateToPokedexDetailsEvent.value = pokemon
+        this.pokemon = pokemon
+        selectedPokemon.value = pokemon
     }
 
     override fun onCleared() {

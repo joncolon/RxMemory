@@ -15,7 +15,7 @@ import getResourceEntryName
 import java.util.*
 import javax.inject.Inject
 
-class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexViewModel)
+class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexViewModel)
     : RecyclerView.Adapter<BaseViewHolder>(), OnPokemonClickListener {
 
     val pokedexEntries: MutableList<Pokemon>
@@ -33,7 +33,7 @@ class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
         val binding = ItemPokedexEntryBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return PokedexViewHolder(binding)
+        return EntryViewHolder(binding)
     }
 
     fun updateList(newPokemon: List<Pokemon>) {
@@ -60,7 +60,7 @@ class PokemonAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
     override fun getItemCount(): Int = pokedexEntries.size
 
 
-    inner class PokedexViewHolder(private val binding: ItemPokedexEntryBinding) : BaseViewHolder(binding.root) {
+    inner class EntryViewHolder(private val binding: ItemPokedexEntryBinding) : BaseViewHolder(binding.root) {
 
         override fun onBind(position: Int) {
             val pokemon = pokedexEntries[position]

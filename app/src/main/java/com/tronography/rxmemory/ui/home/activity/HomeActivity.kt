@@ -3,6 +3,8 @@ package com.tronography.rxmemory.ui.home.activity
 import DEBUG
 import ERROR
 import android.arch.lifecycle.ViewModelProviders
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -11,18 +13,25 @@ import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.databinding.ActivityHomeBinding
 import com.tronography.rxmemory.ui.base.BaseActivity
-import com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel
+import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
 import javax.inject.Inject
 
-class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(), HasSupportFragmentInjector,
+class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HasSupportFragmentInjector,
         NavController.OnNavigatedListener {
 
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        navController = findNavController(R.id.nav_host)
+        navController.addOnNavigatedListener(this)
+    }
+
     override fun onNavigated(controller: NavController, destination: NavDestination) {
-        DEBUG("\n Navigation Listener : \n Controller ${controller} \n NavDestination : ${destination.id}")
+        DEBUG("\n Navigation Listener : \n Controller $controller \n NavDestination : ${destination.id}")
     }
 
     @Inject
@@ -31,14 +40,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeActivityViewModel>(),
     @Inject
     lateinit var fragmentDispatchingAndroidInjector: DispatchingAndroidInjector<Fragment>
 
+    lateinit var navController: NavController
+
     override val bindingVariable: Int
         get() = BR.viewModel
 
     override val layoutId: Int
         get() = R.layout.activity_home
 
-    override val viewModel: HomeActivityViewModel
-        get() = ViewModelProviders.of(this, viewModelFactory).get(HomeActivityViewModel::class.java)
+    override val viewModel: HomeViewModel
+        get() = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
 
 
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host).navigateUp()

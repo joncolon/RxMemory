@@ -5,7 +5,8 @@
     <string name="you_won">YOU WON!</string>
     <string name="try_again">Would you like to play again?</string>
     <string name="card_ratio_horizontal">3.5:2.5</string>
-    <string name="yes">YES</string>
+    <string name="play_again">PLAY AGAIN?</string>
     <string name="no">NO</string>
     <string name="blue_light_indicator">Blue light indicator</string>
+    <string name="attempt_count">Attempt Count:</string>
 </resources>

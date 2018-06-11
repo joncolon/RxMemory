@@ -3,9 +3,7 @@ package com.tronography.rxmemory.injection.modules
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.tronography.rxmemory.injection.annotations.ViewModelKey
-import com.tronography.rxmemory.ui.entry.viewmodel.PokedexEntryViewModel
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
-import com.tronography.rxmemory.ui.home.viewmodel.HomeActivityViewModel
 import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
 import com.tronography.rxmemory.ui.pokedex.viewmodel.PokedexViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
@@ -28,18 +26,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(HomeActivityViewModel::class)
-    internal abstract fun bindHomeActivityViewModel(homeActivityViewModel: HomeActivityViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PokedexViewModel::class)
     internal abstract fun bindPokedexViewModel(gameActivityViewModel: PokedexViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(PokedexEntryViewModel::class)
-    internal abstract fun bindPokedexEntryViewModel(pokedexEntryViewModel: PokedexEntryViewModel): ViewModel
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: DaggerViewModelFactory): ViewModelProvider.Factory

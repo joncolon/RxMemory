@@ -33,6 +33,7 @@ class GameViewModel
     private var liveAttemptCount = MutableLiveData<Int>()
 
     private var firstCardSelected: Card? = null
+    var matchedPokemon: List<Card>? = null
 
     val gameStateDataMerger: MediatorLiveData<GameState> = MediatorLiveData()
 
@@ -64,10 +65,10 @@ class GameViewModel
 
     fun startGame() {
         broadcastGameState(LOADING)
-        clearMediatorSources()
         flippedCards.clear()
         matchedCards.clear()
         attemptCount = ZERO
+        clearMediatorSources()
         refreshCards()
     }
 
@@ -246,6 +247,7 @@ class GameViewModel
                     ERROR("isGameOver = $isGameOver")
                     if (isGameOver) {
                         repository.deleteCardTable()
+                        matchedPokemon = matchedCards.values.distinctBy { it.photoUrl }.toList()
                         broadcastGameState(GAME_OVER)
                     } else {
                         broadcastGameState(IN_PROGRESS)

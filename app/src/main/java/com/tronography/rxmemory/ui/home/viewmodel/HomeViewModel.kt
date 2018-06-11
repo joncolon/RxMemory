@@ -12,16 +12,12 @@ class HomeViewModel
         private val repository: Repository) : ViewModel() {
 
     private val navigateToGameActivityEvent = SingleLiveEvent<String>()
-    private val navigateToSettingsFragmentEvent = SingleLiveEvent<String>()
     private val navigateToPokedexActivityEvent = SingleLiveEvent<String>()
 
-    val navigateToGameActivity: SingleLiveEvent<String>
+    val navigateToGame: SingleLiveEvent<String>
         get() = navigateToGameActivityEvent
 
-    val navigateToSettingsFragment: SingleLiveEvent<String>
-        get() = navigateToSettingsFragmentEvent
-
-    val navigateToPokedexActivity: SingleLiveEvent<String>
+    val navigateToPokedex: SingleLiveEvent<String>
         get() = navigateToPokedexActivityEvent
 
     init {
@@ -29,16 +25,12 @@ class HomeViewModel
         repository.deleteCardTable()
     }
 
-    private fun onSettingsButtonClicked(viewId: String) {
-        navigateToSettingsFragmentEvent.setValue(viewId)
-    }
-
     fun onPokedexButtonClicked(viewId: String) {
-        navigateToPokedexActivityEvent.setValue(viewId)
+        navigateToPokedexActivityEvent.value = viewId
     }
 
     fun onPlayButtonClicked(viewId: String) {
-        navigateToGameActivityEvent.setValue(viewId)
+        navigateToGameActivityEvent.value = viewId
     }
 
     override fun onCleared() {

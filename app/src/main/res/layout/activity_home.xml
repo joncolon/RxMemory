@@ -37,18 +37,18 @@
 
         <android.support.constraint.Guideline
             android:id="@+id/end_guideline"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_end="10dp"/>
+            app:layout_constraintGuide_end="8dp"/>
 
         <android.support.constraint.Guideline
             android:id="@+id/start_guideline"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="10dp"/>
+            app:layout_constraintGuide_begin="8dp"/>
 
         <fragment
             android:id="@+id/nav_host"
@@ -70,7 +70,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:contentDescription="@string/blue_light_indicator"
-            android:src="@drawable/gradient_blue_dim"
+            android:src="@drawable/gradient_blue_glow"
             app:layout_constraintBottom_toTopOf="@id/top_guideline"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="@id/start_guideline"

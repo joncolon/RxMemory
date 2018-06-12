@@ -26,27 +26,6 @@
         android:name="com.tronography.rxmemory.ui.game.fragments.GameFragment"
         android:label="GameFragment"
         tools:layout="@layout/fragment_game">
-        <action
-            android:id="@+id/action_gameFragment_to_gameOverFragment"
-            app:destination="@id/gameOverFragment"
-            app:exitAnim="@anim/nav_default_pop_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/gameOverFragment"
-        android:name="com.tronography.rxmemory.ui.gameover.GameOverFragment"
-        android:label="GameOverFragment"
-        tools:layout="@layout/fragment_game_over">
-        <action
-            android:id="@+id/action_gameOverFragment_to_gameFragment"
-            app:popUpTo="@id/gameFragment"
-            app:popUpToInclusive="true"/>
-
-        <action
-            android:id="@+id/action_gameOverFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -61,7 +40,7 @@
 
     <fragment
         android:id="@+id/pokedexEntryFragment"
-        android:name="com.tronography.rxmemory.ui.entry.fragment.PokedexEntryFragment"
+        android:name="com.tronography.rxmemory.ui.pokedex.entry.fragment.PokedexEntryFragment"
         android:label="PokedexEntryFragment"
         tools:layout="@layout/fragment_pokedex_entry">
         <argument

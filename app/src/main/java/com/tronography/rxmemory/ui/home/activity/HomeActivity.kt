@@ -51,7 +51,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>(), HasSupp
     override val viewModel: HomeViewModel
         get() = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
 
-
     override fun onSupportNavigateUp() = findNavController(R.id.nav_host).navigateUp()
 
     private fun enableBlueIndicator() {

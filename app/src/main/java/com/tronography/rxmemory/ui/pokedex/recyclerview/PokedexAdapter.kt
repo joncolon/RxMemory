@@ -6,7 +6,7 @@ import android.support.v7.util.DiffUtil.calculateDiff
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.tronography.rxmemory.data.model.pokemon.Pokemon
+import com.tronography.rxmemory.data.model.pokemon.PokemonData
 import com.tronography.rxmemory.databinding.ItemPokedexEntryBinding
 import com.tronography.rxmemory.ui.base.BaseViewHolder
 import com.tronography.rxmemory.ui.common.listeners.OnPokemonClickListener
@@ -18,13 +18,13 @@ import javax.inject.Inject
 class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexViewModel)
     : RecyclerView.Adapter<BaseViewHolder>(), OnPokemonClickListener {
 
-    val pokedexEntries: MutableList<Pokemon>
+    val pokedexEntries: MutableList<PokemonData>
 
     init {
         this.pokedexEntries = ArrayList()
     }
 
-    override fun onPokemonClicked(pokemon: Pokemon) {
+    override fun onPokemonClicked(pokemon: PokemonData) {
         DEBUG("Click Successful")
         pokedexViewModel.onPokemonClicked(pokemon)
     }
@@ -36,10 +36,9 @@ class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
         return EntryViewHolder(binding)
     }
 
-    fun updateList(newPokemon: List<Pokemon>) {
+    fun updateList(newPokemon: List<PokemonData>) {
         val result: DiffUtil.DiffResult =
                 calculateDiff(PokemonDiffCallback(newPokemon, pokedexEntries), true)
-
         pokedexEntries.clear()
         pokedexEntries.addAll(newPokemon)
         result.dispatchUpdatesTo(this)
@@ -58,7 +57,6 @@ class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
     }
 
     override fun getItemCount(): Int = pokedexEntries.size
-
 
     inner class EntryViewHolder(private val binding: ItemPokedexEntryBinding) : BaseViewHolder(binding.root) {
 

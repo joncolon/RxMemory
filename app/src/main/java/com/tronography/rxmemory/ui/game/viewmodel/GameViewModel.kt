@@ -30,12 +30,13 @@ class GameViewModel
     private val matchedCards = HashMap<String, Card>()
 
     private var attemptCount = ZERO
-    private var liveAttemptCount = MutableLiveData<Int>()
+    private val liveAttemptCount = MutableLiveData<Int>()
+    private val liveCardsMatched = MutableLiveData<List<Card>>()
 
     private var firstCardSelected: Card? = null
-    var matchedPokemon: List<Card>? = null
+    private var matchedPokemon: List<Card>? = null
 
-    val gameStateDataMerger: MediatorLiveData<GameState> = MediatorLiveData()
+    private val gameStateDataMerger: MediatorLiveData<GameState> = MediatorLiveData()
 
     private var gameState = MutableLiveData<GameState>()
 
@@ -50,9 +51,15 @@ class GameViewModel
 
     private fun refreshCards() {
         DEBUG("refreshCards called")
-        gameStateDataMerger.addSource(repository.getLiveGameState(), { state -> gameStateDataMerger.value = state })
-        gameStateDataMerger.addSource(gameState, { state -> gameStateDataMerger.value = state })
+        with(gameStateDataMerger) {
+            addSource(repository.getLiveGameState(), { gameStateDataMerger.value = it })
+            addSource(gameState, { gameStateDataMerger.value = it })
+        }
         repository.createNewPokemonDeck()
+    }
+
+    fun getCardsMatched(): LiveData<List<Card>> {
+        return liveCardsMatched
     }
 
     fun getAttemptCount(): LiveData<Int> {
@@ -64,9 +71,9 @@ class GameViewModel
     }
 
     fun startGame() {
-        broadcastGameState(LOADING)
         flippedCards.clear()
         matchedCards.clear()
+        matchedPokemon = null
         attemptCount = ZERO
         clearMediatorSources()
         refreshCards()
@@ -98,9 +105,9 @@ class GameViewModel
                                 .compose(addToFlippedCardMap())
                                 .compose(isValidMatch())
                                 .compose(markAsMatched())
-                                .switchMap { delay(ONE_SECOND) }
+                                .switchMap { delay(DELAY) }
                                 .compose(getUnmatchedCards())
-                                .compose(resetUnmatchedCardsWithDelay())
+                                .compose(resetUnmatchedCards())
                                 .compose(clearFlippedCardMap())
                                 .compose(clearSelectedCard())
                                 .compose(isGameOver())
@@ -175,7 +182,7 @@ class GameViewModel
         return ObservableTransformer {
             it.concatMap { selectedCard: Card ->
                 Observable.fromCallable {
-                    flippedCards.put(selectedCard.cardId.toString(), selectedCard)
+                    flippedCards[selectedCard.cardId.toString()] = selectedCard
                     repository.insertCard(selectedCard)
                     return@fromCallable selectedCard
                 }
@@ -184,12 +191,12 @@ class GameViewModel
     }
 
     private fun updateFlippedCards(card: Card) {
-        flippedCards.put(card.cardId.toString(), card)
+        flippedCards[card.cardId.toString()] = card
         repository.insertCard(card)
     }
 
     private fun updateMatchedCards(matchedCard: Card) {
-        matchedCards.put(matchedCard.cardId.toString(), matchedCard)
+        matchedCards[matchedCard.cardId.toString()] = matchedCard
         repository.updatePokemonAsCaught(matchedCard.pokemonId, true)
         repository.insertCard(matchedCard)
     }
@@ -204,7 +211,7 @@ class GameViewModel
         }
     }
 
-    private fun resetUnmatchedCardsWithDelay(): ObservableTransformer<List<Card>, Unit> {
+    private fun resetUnmatchedCards(): ObservableTransformer<List<Card>, Unit> {
         return ObservableTransformer {
             it.concatMap { cards ->
                 Observable.fromCallable {
@@ -248,6 +255,8 @@ class GameViewModel
                     if (isGameOver) {
                         repository.deleteCardTable()
                         matchedPokemon = matchedCards.values.distinctBy { it.photoUrl }.toList()
+                        liveCardsMatched.value = matchedPokemon
+                        DEBUG(matchedPokemon.toString())
                         broadcastGameState(GAME_OVER)
                     } else {
                         broadcastGameState(IN_PROGRESS)
@@ -277,7 +286,7 @@ class GameViewModel
     }
 
     companion object {
-        private const val ONE_SECOND: Long = 1000
+        private const val DELAY: Long = 1000
         private const val DECK_SIZE = 16
         private const val ZERO = 0
     }

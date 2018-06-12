@@ -19,6 +19,7 @@ import com.tronography.rxmemory.ui.home.viewmodel.HomeViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
 import dagger.android.support.AndroidSupportInjection
 import getResourceEntryName
+import toast
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
@@ -56,6 +57,8 @@ class HomeFragment : Fragment() {
         viewDataBinding.setVariable(bindingVariable, viewModel)
         viewDataBinding.executePendingBindings()
         setUpClickListeners()
+        observeNetworkError()
+        observeDatabaseCount()
         observeNavigationEvents()
     }
 
@@ -69,6 +72,54 @@ class HomeFragment : Fragment() {
             DEBUG("$viewId clicked")
             Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_homeFragment_to_pokedexFragment)
         })
+    }
+
+    private fun observeDatabaseCount() {
+        viewModel.getPokemonDatabaseCount().observe(this, Observer {count ->
+            DEBUG("DB Count = $count")
+            count?.let {
+                if (count >= 8) {
+                    hideProgressBar()
+                } else {
+                    showProgressBar()
+                }
+
+                if (count < 151) {
+                    showDownloadCountStatus()
+                    val remainingCount = "$count/151"
+                    viewDataBinding.downloadCountTv.text = remainingCount
+                } else {
+                    hideDownloadCountStatus()
+                }
+            }
+
+        })
+    }
+
+    fun observeNetworkError(){
+        viewModel.getNetworkError().observe(this, Observer { error ->
+            error?.let {
+                activity!!.toast("ERROR")
+            }
+        })
+    }
+
+    private fun showDownloadCountStatus() {
+        viewDataBinding.downloadingTv.visibility = View.VISIBLE
+        viewDataBinding.downloadCountTv.visibility = View.VISIBLE
+    }
+
+    private fun hideDownloadCountStatus() {
+        viewDataBinding.downloadingTv.visibility = View.GONE
+        viewDataBinding.downloadCountTv.visibility = View.GONE
+    }
+
+    private fun hideProgressBar() {
+        viewDataBinding.progressBar.visibility = View.GONE
+    }
+
+    private fun showProgressBar() {
+        viewDataBinding.progressBar.visibility = View.VISIBLE
     }
 
     private fun setUpClickListeners() {

@@ -1,4 +1,4 @@
-package com.tronography.rxmemory.ui.entry.module
+package com.tronography.rxmemory.ui.pokedex.entry.module
 
 import dagger.Module
 

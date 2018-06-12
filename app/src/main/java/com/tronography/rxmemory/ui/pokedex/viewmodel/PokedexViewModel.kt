@@ -1,10 +1,11 @@
 package com.tronography.rxmemory.ui.pokedex.viewmodel
 
 import DEBUG
+import android.annotation.SuppressLint
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.tronography.rxmemory.data.livedata.SingleLiveEvent
-import com.tronography.rxmemory.data.model.pokemon.Pokemon
+import com.tronography.rxmemory.data.model.pokemon.PokemonData
 import com.tronography.rxmemory.data.repository.Repository
 import javax.inject.Inject
 
@@ -18,20 +19,23 @@ class PokedexViewModel
         DEBUG("Initializing PokedexViewModel")
     }
 
-    private val selectedPokemon = SingleLiveEvent<Pokemon>()
+    private val selectedPokemon = SingleLiveEvent<PokemonData>()
 
-    val getSelectedPokemon: SingleLiveEvent<Pokemon>
+    val getSelectedPokemon: SingleLiveEvent<PokemonData>
         get() = selectedPokemon
 
-    var pokemon: Pokemon? = null
+    var pokemon: PokemonData? = null
 
-    fun getPokemon(): LiveData<List<Pokemon>> {
+    fun getPokemon(): LiveData<List<PokemonData>> {
         return repository.getCaughtPokemon()
     }
 
-    fun onPokemonClicked(pokemon: Pokemon) {
-        DEBUG("Pokemon clicked : ${pokemon.name}")
+    @SuppressLint("CheckResult")
+    fun onPokemonClicked(pokemon: PokemonData) {
+        DEBUG("PokemonResponse clicked : ${pokemon.name}")
         this.pokemon = pokemon
+        DEBUG("GETTING SPECIES...")
+
         selectedPokemon.value = pokemon
     }
 

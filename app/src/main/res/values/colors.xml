@@ -10,6 +10,10 @@
     <color name="colorCardBackFill">#0D4F89</color>
     <color name="colorGrey">#D8DCDB</color>
 
+    <!--Transparent Color-->
+    <color name="black_opacity_90">#90000000</color>
+
+
     <!--Text Color-->
     <color name="colorTextDark">#171717</color>
     <color name="colorTextLight">#8D93A0</color>

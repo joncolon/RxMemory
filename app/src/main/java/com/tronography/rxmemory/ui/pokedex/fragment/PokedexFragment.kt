@@ -44,11 +44,6 @@ class PokedexFragment : Fragment() {
 
     lateinit var viewModel: PokedexViewModel
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onAttach(context: Context?) {
         performDependencyInjection()
         super.onAttach(context)

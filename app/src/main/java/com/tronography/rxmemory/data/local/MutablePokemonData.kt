@@ -2,13 +2,12 @@ package com.tronography.rxmemory.data.local
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.tronography.rxmemory.data.model.pokemon.Pokemon
-import com.tronography.rxmemory.data.model.pokemon.Species
+import com.tronography.rxmemory.data.model.pokemon.PokemonData
 import com.tronography.rxmemory.data.model.pokemon.Sprites
 import com.tronography.rxmemory.data.model.pokemon.TypesItem
 
 @Entity(tableName = AppDatabase.POKEMON_TABLE)
-class MutablePokemon(
+class MutablePokemonData(
 
         var types: List<TypesItem>,
 
@@ -16,7 +15,9 @@ class MutablePokemon(
 
         var sprites: Sprites,
 
-        var species: Species,
+        var habitat: String,
+
+        var description: String,
 
         var name: String,
 
@@ -25,22 +26,19 @@ class MutablePokemon(
 
         var height: Int,
 
-        var caught: Boolean,
+        var caught: Boolean) {
 
-        var encountered: Boolean
-) {
-
-    fun toImmutable(): Pokemon {
-        return Pokemon(
+    fun toImmutable(): PokemonData {
+        return PokemonData(
                 types,
                 weight,
                 sprites,
-                species,
+                habitat,
+                description,
                 name,
                 id,
                 height,
-                caught,
-                encountered
+                caught
         )
     }
 

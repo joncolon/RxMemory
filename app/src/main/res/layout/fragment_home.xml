@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -15,21 +16,52 @@
         android:id="@+id/card_front_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
         android:elevation="@dimen/no_elevation">
+
+        <TextView
+            android:id="@+id/downloading_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poke_gameboy"
+            app:layout_constraintTop_toBottomOf="@+id/pokeball_iv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Downloading Pokemon..."
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/download_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poke_gameboy"
+            app:layout_constraintTop_toBottomOf="@+id/downloading_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="4dp"
+            tools:text="0/151"
+            android:visibility="gone"
+            />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/horizontal_guideline"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".4"/>
 
         <ImageView
             android:id="@+id/pokeball_iv"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintHeight_percent=".25"
+            android:padding="30dp"
             android:layout_marginBottom="43dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_pokeball_card_back"
-            app:layout_constraintBottom_toTopOf="@+id/play_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="spread_inside"
             app:layout_constraintVertical_weight="10"/>
 
         <Button
@@ -46,7 +78,7 @@
             app:layout_constraintBottom_toTopOf="@+id/pokedex_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pokeball_iv"
+            app:layout_constraintTop_toBottomOf="@+id/horizontal_guideline"
             app:layout_constraintVertical_weight="3"/>
 
         <Button
@@ -81,6 +113,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pokedex_button"
             app:layout_constraintVertical_weight="3"
+            />
+
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/progress_bar_dim"
+            android:visibility="gone"
             />
 
     </android.support.constraint.ConstraintLayout>

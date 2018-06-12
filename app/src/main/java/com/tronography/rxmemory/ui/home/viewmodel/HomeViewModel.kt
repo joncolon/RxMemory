@@ -4,6 +4,7 @@ import DEBUG
 import android.arch.lifecycle.ViewModel
 import com.tronography.rxmemory.data.livedata.SingleLiveEvent
 import com.tronography.rxmemory.data.repository.Repository
+import com.tronography.rxmemory.data.state.NetworkStateLiveData
 import javax.inject.Inject
 
 
@@ -13,7 +14,6 @@ class HomeViewModel
 
     private val navigateToGameActivityEvent = SingleLiveEvent<String>()
     private val navigateToPokedexActivityEvent = SingleLiveEvent<String>()
-
     val navigateToGame: SingleLiveEvent<String>
         get() = navigateToGameActivityEvent
 
@@ -22,8 +22,15 @@ class HomeViewModel
 
     init {
         DEBUG("Initializing HomeViewModel")
+        repository.downloadPokemon()
         repository.deleteCardTable()
     }
+
+    fun getNetworkError(): NetworkStateLiveData {
+        return repository.getLiveNetworkError()
+    }
+
+    fun getPokemonDatabaseCount() = repository.getPokemonDatabaseCountLiveData()
 
     fun onPokedexButtonClicked(viewId: String) {
         navigateToPokedexActivityEvent.value = viewId

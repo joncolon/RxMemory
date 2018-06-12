@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/black_opacity_90"
+    android:clickable="true"
+    android:elevation="10dp"
+    android:focusable="true">
+
+    <ProgressBar
+        android:id="@+id/progress_bar_dim"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/ic_pokeball_pixel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ProgressBar
+        android:layout_width="75dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:indeterminateTint="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/progress_bar_dim"
+        app:layout_constraintStart_toStartOf="@id/progress_bar_dim"
+        app:layout_constraintEnd_toEndOf="@id/progress_bar_dim"
+        app:layout_constraintTop_toTopOf="@id/progress_bar_dim"
+        />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:bind="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,7 +12,7 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/card_front_container"
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="@dimen/no_elevation"
@@ -63,6 +62,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/you_won_tv"/>
 
+        <TextView
+            android:id="@+id/pokemon_matched_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pokemon_gameboy"
+            android:text="Pokemon Matched: "
+            android:textColor="@color/colorTextDark"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/end_guideline"
+            app:layout_constraintBottom_toTopOf="@id/pokemon_one"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
         <Button
             android:id="@+id/yes_button"
             android:layout_width="0dp"
@@ -82,7 +96,6 @@
 
         <ImageView
             android:id="@+id/pokemon_one"
-            app:layout_constraintHorizontal_weight="1"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
             android:layout_margin="1dp"
@@ -91,14 +104,13 @@
             app:layout_constraintDimensionRatio="@string/cardImageRatio"
             app:layout_constraintEnd_toStartOf="@id/pokemon_two"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(0).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
             android:id="@+id/pokemon_two"
-            app:layout_constraintHorizontal_weight="1"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
             android:layout_margin="1dp"
@@ -106,14 +118,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="@string/cardImageRatio"
             app:layout_constraintEnd_toStartOf="@id/pokemon_three"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/pokemon_one"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(1).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
             android:id="@+id/pokemon_three"
-            app:layout_constraintHorizontal_weight="1"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
             android:layout_margin="1dp"
@@ -121,74 +132,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="@string/cardImageRatio"
             app:layout_constraintEnd_toStartOf="@id/pokemon_four"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/pokemon_two"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(2).photoUrl}"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
         <ImageView
             android:id="@+id/pokemon_four"
-            app:layout_constraintHorizontal_weight="1"
-            android:layout_width="@dimen/match_constraints"
-            android:layout_height="@dimen/match_constraints"
-            android:layout_margin="1dp"
-            android:elevation="@dimen/no_elevation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="@string/cardImageRatio"
-            app:layout_constraintEnd_toStartOf="@id/pokemon_five"
-            app:layout_constraintStart_toEndOf="@id/pokemon_three"
-            app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(3).photoUrl}"
-            tools:src="@drawable/ic_pokeball_pixel"/>
-
-        <ImageView
-            android:id="@+id/pokemon_five"
-            app:layout_constraintHorizontal_weight="1"
-            android:layout_width="@dimen/match_constraints"
-            android:layout_height="@dimen/match_constraints"
-            android:layout_margin="1dp"
-            android:elevation="@dimen/no_elevation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="@string/cardImageRatio"
-            app:layout_constraintEnd_toStartOf="@id/pokemon_six"
-            app:layout_constraintStart_toEndOf="@id/pokemon_four"
-            app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(4).photoUrl}"
-            tools:src="@drawable/ic_pokeball_pixel"/>
-
-        <ImageView
-            android:id="@+id/pokemon_six"
-            app:layout_constraintHorizontal_weight="1"
-            android:layout_width="@dimen/match_constraints"
-            android:layout_height="@dimen/match_constraints"
-            android:layout_margin="1dp"
-            android:elevation="@dimen/no_elevation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="@string/cardImageRatio"
-            app:layout_constraintEnd_toStartOf="@id/pokemon_seven"
-            app:layout_constraintStart_toEndOf="@id/pokemon_five"
-            app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(5).photoUrl}"
-            tools:src="@drawable/ic_pokeball_pixel"/>
-
-        <ImageView
-            android:id="@+id/pokemon_seven"
-            app:layout_constraintHorizontal_weight="1"
-            android:layout_width="@dimen/match_constraints"
-            android:layout_height="@dimen/match_constraints"
-            android:layout_margin="1dp"
-            android:elevation="@dimen/no_elevation"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="@string/cardImageRatio"
-            app:layout_constraintEnd_toStartOf="@id/pokemon_eight"
-            app:layout_constraintStart_toEndOf="@id/pokemon_six"
-            app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(6).photoUrl}"
-            tools:src="@drawable/ic_pokeball_pixel"/>
-
-        <ImageView
-            android:id="@+id/pokemon_eight"
-            app:layout_constraintHorizontal_weight="1"
             android:layout_width="@dimen/match_constraints"
             android:layout_height="@dimen/match_constraints"
             android:layout_margin="1dp"
@@ -196,9 +146,61 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="@string/cardImageRatio"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/pokemon_seven"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/pokemon_three"
             app:layout_constraintTop_toTopOf="parent"
-            bind:imageUrl="@{viewModel.matchedPokemon.get(7).photoUrl}"
+            tools:src="@drawable/ic_pokeball_pixel"/>
+
+        <ImageView
+            android:id="@+id/pokemon_five"
+            android:layout_width="@dimen/match_constraints"
+            android:layout_height="@dimen/match_constraints"
+            android:layout_margin="1dp"
+            android:elevation="@dimen/no_elevation"
+            app:layout_constraintDimensionRatio="@string/cardImageRatio"
+            app:layout_constraintEnd_toStartOf="@id/pokemon_six"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_four"
+            tools:src="@drawable/ic_pokeball_pixel"/>
+
+        <ImageView
+            android:id="@+id/pokemon_six"
+            android:layout_width="@dimen/match_constraints"
+            android:layout_height="@dimen/match_constraints"
+            android:layout_margin="1dp"
+            android:elevation="@dimen/no_elevation"
+            app:layout_constraintDimensionRatio="@string/cardImageRatio"
+            app:layout_constraintEnd_toStartOf="@id/pokemon_seven"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/pokemon_five"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_four"
+            tools:src="@drawable/ic_pokeball_pixel"/>
+
+        <ImageView
+            android:id="@+id/pokemon_seven"
+            android:layout_width="@dimen/match_constraints"
+            android:layout_height="@dimen/match_constraints"
+            android:layout_margin="1dp"
+            android:elevation="@dimen/no_elevation"
+            app:layout_constraintDimensionRatio="@string/cardImageRatio"
+            app:layout_constraintEnd_toStartOf="@id/pokemon_eight"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/pokemon_six"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_four"
+            tools:src="@drawable/ic_pokeball_pixel"/>
+
+        <ImageView
+            android:id="@+id/pokemon_eight"
+            android:layout_width="@dimen/match_constraints"
+            android:layout_height="@dimen/match_constraints"
+            android:layout_margin="1dp"
+            android:elevation="@dimen/no_elevation"
+            app:layout_constraintDimensionRatio="@string/cardImageRatio"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/pokemon_seven"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_four"
             tools:src="@drawable/ic_pokeball_pixel"/>
 
 
@@ -207,7 +209,7 @@
             android:layout_width="1dp"
             android:layout_height="1dp"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".5"/>
+            app:layout_constraintGuide_percent=".3"/>
 
     </android.support.constraint.ConstraintLayout>
 

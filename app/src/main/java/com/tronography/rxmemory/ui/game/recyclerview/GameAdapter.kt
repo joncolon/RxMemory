@@ -46,10 +46,7 @@ class GameAdapter @Inject constructor(private val gameViewModel: GameViewModel) 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-
-        val binding = ItemCardBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
-
+        val binding = ItemCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CardViewHolder(binding)
     }
 

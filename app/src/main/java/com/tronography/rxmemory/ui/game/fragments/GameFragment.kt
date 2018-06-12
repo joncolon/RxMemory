@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
-import androidx.navigation.Navigation
 import com.tronography.rxmemory.BR
 import com.tronography.rxmemory.R
 import com.tronography.rxmemory.data.state.GameState.*
@@ -22,6 +21,7 @@ import com.tronography.rxmemory.ui.game.recyclerview.GameAdapter
 import com.tronography.rxmemory.ui.game.recyclerview.GameItemAnimator
 import com.tronography.rxmemory.ui.game.viewmodel.GameViewModel
 import com.tronography.rxmemory.utilities.DaggerViewModelFactory
+import com.tronography.rxmemory.utilities.GlideUtils
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -29,6 +29,9 @@ class GameFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: DaggerViewModelFactory
+
+    @Inject
+    lateinit var glideUtils: GlideUtils
 
     @LayoutRes
     private val layoutId = R.layout.fragment_game
@@ -39,7 +42,7 @@ class GameFragment : Fragment() {
 
     private lateinit var rootView: View
 
-    private lateinit var gameAdapter: GameAdapter
+    private var gameAdapter: GameAdapter? = null
 
     lateinit var viewModel: GameViewModel
 
@@ -51,11 +54,17 @@ class GameFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(GameViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GameViewModel::class.java)
         viewDataBinding = DataBindingUtil.inflate(inflater, layoutId, container, false)
         rootView = viewDataBinding.root
-        setUpRecyclerView()
+        setOnClickListeners()
         return rootView
+    }
+
+    private fun setOnClickListeners() {
+        viewDataBinding.gameOver.yesButton.setOnClickListener {
+            viewModel.startGame()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,12 +81,34 @@ class GameFragment : Fragment() {
     private fun observeLiveData() {
         observeGameState()
         observeLiveDeck()
+        viewModel.getAttemptCount().observe(this, Observer { count ->
+            count?.let {
+                viewDataBinding.gameOver.attemptCountValueTv.text = count.toString()
+            }
+        })
+
+        viewModel.getCardsMatched().observe(this, Observer { cards ->
+            DEBUG("matched cards from viewmodel = $cards")
+            cards?.let {
+                with(viewDataBinding.gameOver) {
+                    glideUtils.loadImage(cards[0].photoUrl, pokemonOne)
+                    glideUtils.loadImage(cards[1].photoUrl, pokemonTwo)
+                    glideUtils.loadImage(cards[2].photoUrl, pokemonThree)
+                    glideUtils.loadImage(cards[3].photoUrl, pokemonFour)
+                    glideUtils.loadImage(cards[4].photoUrl, pokemonFive)
+                    glideUtils.loadImage(cards[5].photoUrl, pokemonSix)
+                    glideUtils.loadImage(cards[6].photoUrl, pokemonSeven)
+                    glideUtils.loadImage(cards[7].photoUrl, pokemonEight)
+                }
+            }
+        })
     }
 
     private fun observeLiveDeck() {
         viewModel.observeDeck().observe(this, Observer { cards ->
             cards?.let {
-                    gameAdapter.updateList(cards)
+                DEBUG("cards = ${cards.size}")
+                gameAdapter?.updateList(cards)
             }
         })
     }
@@ -85,22 +116,23 @@ class GameFragment : Fragment() {
     private fun observeGameState() {
         viewModel.getGameState()
                 .observe(this, Observer { gameState ->
-                    DEBUG("GAME STATE : ${gameState}")
+                    DEBUG("GAME STATE : $gameState")
                     when (gameState) {
                         LOADING -> {
-                            //todo: show loading status
+                            hideGameOverLayout()
+                            setUpRecyclerView()
                         }
 
                         LOAD_COMPLETE -> {
                         }
 
-                        IN_PROGRESS -> gameAdapter.enableCardClick()
+                        IN_PROGRESS -> gameAdapter?.enableCardClick()
 
-                        RESETTING_CARDS -> gameAdapter.disableCardClicks()
+                        RESETTING_CARDS -> gameAdapter?.disableCardClicks()
 
                         GAME_OVER -> {
-                            gameAdapter.disableCardClicks()
-                            showGameOverFragment()
+                            gameAdapter?.disableCardClicks()
+                            showGameOverLayout()
                         }
 
                         ERROR -> {
@@ -110,8 +142,14 @@ class GameFragment : Fragment() {
                 })
     }
 
-    private fun showGameOverFragment() {
-        Navigation.findNavController(activity!!, R.id.nav_host).navigate(R.id.action_gameFragment_to_gameOverFragment)
+    private fun showGameOverLayout() {
+        viewDataBinding.gameOver.constraintLayout.visibility = View.VISIBLE
+        viewDataBinding.recyclerView.visibility = View.INVISIBLE
+    }
+
+    private fun hideGameOverLayout() {
+        viewDataBinding.gameOver.constraintLayout.visibility = View.GONE
+        viewDataBinding.recyclerView.visibility = View.VISIBLE
     }
 
     private fun setUpRecyclerView() {

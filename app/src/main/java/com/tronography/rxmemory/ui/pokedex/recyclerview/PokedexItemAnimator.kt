@@ -10,7 +10,6 @@ import com.tronography.rxmemory.utilities.ViewUtils
 
 class PokedexItemAnimator : DefaultItemAnimator() {
 
-
     override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
         return true
     }
@@ -24,7 +23,7 @@ class PokedexItemAnimator : DefaultItemAnimator() {
         val screenHeight = ViewUtils.getScreenHeight(holder.itemView.context)
         holder.itemView.translationY = screenHeight.toFloat()
 
-        val startDelay = (adapterPosition * 2).toLong()
+        val startDelay = (adapterPosition * 10).toLong()
         holder.itemView.animate()
                 .translationY(0f)
                 .setInterpolator(DECELERATE_INTERPOLATOR)
@@ -40,6 +39,6 @@ class PokedexItemAnimator : DefaultItemAnimator() {
 
     companion object {
         private val DECELERATE_INTERPOLATOR = DecelerateInterpolator(3f)
-        private const val ENTER_DURATION: Long = 200
+        private const val ENTER_DURATION: Long = 500
     }
 }

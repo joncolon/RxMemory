@@ -5,7 +5,7 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 
 @Database(
-        entities = [(MutableCard::class), (MutablePokemon::class)],
+        entities = [(MutableCard::class), (MutablePokemonData::class)],
         version = 1,
         exportSchema = false
 )

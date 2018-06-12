@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.tronography.rxmemory.data.model.pokemon.Pokemon"/>
+            type="com.tronography.rxmemory.data.model.pokemon.PokemonData"/>
 
     </data>
 

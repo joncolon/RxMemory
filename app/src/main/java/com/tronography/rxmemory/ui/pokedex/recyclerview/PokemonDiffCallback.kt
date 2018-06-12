@@ -1,10 +1,10 @@
 package com.tronography.rxmemory.ui.pokedex.recyclerview
 
 import android.support.v7.util.DiffUtil
-import com.tronography.rxmemory.data.model.pokemon.Pokemon
+import com.tronography.rxmemory.data.model.pokemon.PokemonData
 
 
-class PokemonDiffCallback(private var newPokemon: List<Pokemon>, private var oldPokemon: List<Pokemon>) : DiffUtil.Callback() {
+class PokemonDiffCallback(private var newPokemon: List<PokemonData>, private var oldPokemon: MutableList<PokemonData>) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldPokemon.size
 

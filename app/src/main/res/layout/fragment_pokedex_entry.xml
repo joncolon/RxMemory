@@ -44,16 +44,16 @@
             app:layout_constraintHeight_percent=".2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_pokeball_pixel"
-            bind:imageUrl="@{viewModel.pokemon.sprites.frontDefault}"/>
+            bind:imageUrl="@{viewModel.pokemon.sprites.frontDefault}"
+            tools:src="@drawable/ic_pokeball_pixel"/>
 
         <TextView
             android:id="@+id/pokemon_id_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="center"
             android:fontFamily="@font/poke_gameboy"
+            android:gravity="center"
             android:text="@{`No.` + String.valueOf(viewModel.pokemon.id)}"
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
@@ -69,16 +69,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poke_gameboy"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:text="@{viewModel.pokemon.caught ? viewModel.pokemon.name : `???`}"
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toTopOf="@+id/pokemon_height_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sprite_iv"
-            app:layout_constraintVertical_chainStyle="spread_inside"
             tools:text="Pikachu"
             />
 
@@ -86,6 +84,7 @@
             android:id="@+id/pokemon_height_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/poke_gameboy"
             android:gravity="center_vertical"
             android:text="@{`HEIGHT ` + String.valueOf(viewModel.pokemon.height)}"
@@ -96,21 +95,15 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="HEIGHT: 22"/>
 
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            app:layout_constraintBottom_toTopOf="@id/guideline_mid_horizontal"
-            app:layout_constraintTop_toBottomOf="@id/guideline_mid_horizontal"
-            android:layout_height="4dp"
-            android:background="@color/colorBlack"/>
         <TextView
             android:id="@+id/pokemon_weight_tv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/poke_gameboy"
             android:gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:text="@{`WEIGHT ` + String.valueOf(viewModel.pokemon.weight)}"
             app:autoSizePresetSizes="@array/autosize_text_sizes"
             app:autoSizeStepGranularity="2sp"
@@ -119,6 +112,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pokemon_height_tv"
             tools:text="WEIGHT: 15"
+            />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@color/colorBlack"
+            app:layout_constraintBottom_toTopOf="@id/guideline_mid_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/guideline_mid_horizontal"/>
+
+        <TextView
+            android:id="@+id/pokemon_description_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/poke_gameboy"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@{viewModel.pokemon.description}"
+            app:autoSizePresetSizes="@array/autosize_text_sizes"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline_mid_horizontal"
+            tools:text="This pokemon has a flower on it's back. When sunlight shines it explodes."
             />
 
     </android.support.constraint.ConstraintLayout>

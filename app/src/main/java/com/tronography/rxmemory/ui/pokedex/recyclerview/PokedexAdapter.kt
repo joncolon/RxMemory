@@ -26,7 +26,9 @@ class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
 
     override fun onPokemonClicked(pokemon: PokemonData) {
         DEBUG("Click Successful")
-        pokedexViewModel.onPokemonClicked(pokemon)
+        when {
+            pokemon.caught -> pokedexViewModel.onPokemonClicked(pokemon)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -47,12 +49,12 @@ class PokedexAdapter @Inject constructor(private val pokedexViewModel: PokedexVi
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.adapterPosition
-        holder.itemView.setOnClickListener({
+        holder.itemView.setOnClickListener {
             DEBUG("view clicked : ${it.getResourceEntryName()}")
             val adapterPosition = holder.adapterPosition
             when {adapterPosition != RecyclerView.NO_POSITION -> onPokemonClicked(pokedexEntries[adapterPosition])
             }
-        })
+        }
         holder.onBind(position)
     }
 

@@ -92,17 +92,9 @@ class Repository
 
                     override fun onSuccess(pokemonCount: Int) {
                         DEBUG("Pokemon Count = $pokemonCount")
-                        var offset = 0
-                        var limit = FULL_DATABASE
-
-                        if (pokemonCount > 0) {
-                            offset = FULL_DATABASE - pokemonCount
-                            limit = (FULL_DATABASE - offset) + 1
-                        }
-                        DEBUG("limit = $limit / offset = $offset")
 
                         if (pokemonCount < FULL_DATABASE) {
-                            getPokemonFromApi(limit, offset)
+                            getPokemonFromApi(FULL_DATABASE, NO_OFFSET)
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribeWith(object : DisposableObserver<Unit>() {
                                         override fun onComplete() {

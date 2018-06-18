@@ -52,8 +52,8 @@ class GameViewModel
     private fun refreshCards() {
         DEBUG("refreshCards called")
         with(gameStateDataMerger) {
-            addSource(repository.getLiveGameState(), { gameStateDataMerger.value = it })
-            addSource(gameState, { gameStateDataMerger.value = it })
+            addSource(repository.getLiveGameState()) { gameStateDataMerger.value = it }
+            addSource(gameState) { gameStateDataMerger.value = it }
         }
         repository.createNewPokemonDeck()
     }

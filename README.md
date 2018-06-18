@@ -1,5 +1,7 @@
 ## RxMemory
 
+#### * This app is developed using Android Canary Preview Build 3.2 18 *
+
 ###### RxMemory is a Kotlin-based Android application to create a classic memory matching card game where users can collect pokemon cards they’ve matched to be viewed in a separate collection screen.
 
 ###### Animation Demo: https://youtu.be/EZo7kIWQ2qw
